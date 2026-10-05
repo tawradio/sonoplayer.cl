@@ -12,7 +12,7 @@ const iconPaths={restaurant:'M7 2v12m-3-12v8c0 3 6 3 6 0V2M7 14v18M19 2c-6 7-6 1
 const channels=[['Ambiental<br>Suave','Instrumental lenta'],['Ambiental<br>Media','Instrumental<br>ritmo medio'],['Música<br>M Pop','Pop latino'],['Rock','Electrónica y rock<br>desde los 70'],['Oldies',"60 · 70 · 80 · 90"],['All Music','De todo tipo<br>Radio'],['Mi Playlist','Tu propia música<br>(MP3)'],['Multimedia','Música + Video<br>MP4'],['Sono Kids','Música para pequeños<br>grandes momentos'],['Navidad','El sonido de una<br>época especial']];document.querySelector('#channels').innerHTML=channels.map(([name,desc],i)=>'<button class="channel" data-channel="'+i+'"><img src="channel-'+i+'.webp" alt="" loading="lazy"><span class="channel-play" aria-hidden="true">▶</span><strong>'+name+'</strong><small>'+desc+'</small>'+ (i===9?'<span class="season-badge">Especial de temporada</span>':'')+'</button>').join('');
 const modal=document.querySelector('#modal'),content=document.querySelector('#modal-content');const messages={drive:['SonoPlayer Drive','La experiencia gratuita con publicidad y noticias está en preparación. El tiempo en línea, GPS y los relatos turísticos por voz se incorporarán en una etapa futura.'],access:['Acceso Clientes','El acceso a cuentas se habilitará al conectar el servicio de suscripción. Puedes probar tus propios archivos con Mi Playlist y Multimedia.'],contact:['Contacto SonoPlayer','Correo: contacto@sonoplayer.cl. Teléfono: +56 9 5167 9720.'],blog:['Blog SonoPlayer','Próximamente: novedades sobre música, ambientación de negocios y viajes.'],terms:['Términos y condiciones','Los términos comerciales y de privacidad se publicarán antes de activar el servicio. En la prueba de archivos locales, tus MP3 y MP4 se reproducen desde tu dispositivo y no se suben a un servidor. Usa contenido que estés autorizado a reproducir.'],genres:['Nuestros géneros','Ambiental Suave: instrumental lenta. Ambiental Media: instrumental de ritmo medio. Música M Pop: pop latino. Rock: electrónica y rock desde los 70. Oldies: inspiración de los 60 a los 90. All Music: selección variada en formato radio. Sono Kids: canciones infantiles e instrumentales para espacios familiares. Navidad: música navideña instrumental y vocal, jazz, bossa y pop con campanillas.']};function show(key){if(key==='drive'){window.open('https://tawradio.github.io/sonoplayer-drive','_blank');return;}
 if(key==='contact'){content.innerHTML='<h2>Contacto SonoPlayer</h2><p>Conversemos sobre la música para tu negocio.</p><p><strong>Correo</strong><br><a class="text-link" href="mailto:contacto@sonoplayer.cl">contacto@sonoplayer.cl</a></p><p><strong>Teléfono</strong><br><a class="text-link" href="tel:+56951679720">+56 9 5167 9720</a></p>';modal.showModal();return}const [title,text]=messages[key];content.replaceChildren();const h=document.createElement('h2'),p=document.createElement('p');h.textContent=title;p.textContent=text;content.append(h,p);modal.showModal()}document.querySelectorAll('[data-dialog]').forEach(b=>b.onclick=()=>{
-  if(b.dataset.dialog==='access'){window.open('https://tawradio.github.io/sonoplayer-portal','_blank');return;}
+  if(b.dataset.dialog==='access'){showLoginModal();return;}
   show(b.dataset.dialog);
 });document.querySelector('.close').onclick=()=>modal.close();modal.addEventListener('click',e=>{if(e.target===modal){const r=modal.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)modal.close()}});modal.addEventListener('close',()=>{content.querySelectorAll('audio,video').forEach(m=>m.pause())});
 const detail={business:['SonoPlayer Business','Música para restaurantes, hoteles, cafeterías, bares, supermercados y retail. Elige canales por ambiente, incorpora tus MP3 con Mi Playlist y reproduce videos MP4 con Multimedia. La suscripción y programación se conectarán al activar el servicio.'],precios:['Precios del servicio','Business será un servicio por suscripción. Los planes y tarifas están por definir. Drive será gratuito para conductores, con publicidad y noticias.'],nosotros:['Nosotros','SonoPlayer es una plataforma musical con un catálogo creado con asistencia de inteligencia artificial y selección humana. Sus vocalistas y grupos son proyectos digitales originales, con identidades y nombres propios. Música Inteligente para tu negocio, tu viaje y tu mundo.']};document.querySelectorAll('[data-detail]').forEach(b=>b.onclick=()=>{const [title,text]=detail[b.dataset.detail];const area=document.querySelector('#details');document.querySelector('#detail-content').innerHTML='<h2>'+title+'</h2><p>'+text+'</p>';area.hidden=false;area.scrollIntoView({behavior:'smooth'});closeMenu()});document.querySelector('.close-detail').onclick=()=>document.querySelector('#details').hidden=true;document.querySelector('[data-scroll]').onclick=()=>document.querySelector('#musica').scrollIntoView({behavior:'smooth'});
@@ -20,31 +20,116 @@ let urls=[];function localPlayer(video){urls.forEach(URL.revokeObjectURL);urls=[
 var streamUrls={0:'https://stream.stumusicpro.cl/manana',1:'https://stream.stumusicpro.cl/almuerzo',2:'https://stream.stumusicpro.cl/tardenoche',3:'https://stream.stumusicpro.cl/rock',4:'https://stream.stumusicpro.cl/pop',5:'https://stream.stumusicpro.cl/jazz',8:'https://stream.stumusicpro.cl/softmusic',9:'https://stream.stumusicpro.cl/musicnews'};
 var globalAudio=new Audio();
 var currentChannel=-1;
+var demoTimer=null;
+var DEMO_SECONDS=30;
+
+function stopDemo(){
+  clearTimeout(demoTimer);
+  globalAudio.pause();
+  currentChannel=-1;
+  document.querySelectorAll('.channel').forEach(c=>c.querySelector('.channel-play').textContent='▶');
+}
+
+function playDemo(i,btn){
+  stopDemo();
+  if(!streamUrls[i]) return;
+  globalAudio.src=streamUrls[i];
+  globalAudio.play().catch(()=>{});
+  currentChannel=i;
+  document.querySelectorAll('.channel').forEach(c=>c.querySelector('.channel-play').textContent='▶');
+  btn.querySelector('.channel-play').textContent='⏸';
+  // Auto-stop después de 30 segundos
+  demoTimer=setTimeout(function(){
+    stopDemo();
+  }, DEMO_SECONDS*1000);
+}
+
 document.querySelectorAll('[data-channel]').forEach(b=>b.onclick=()=>{
   const i=Number(b.dataset.channel);
-  if(i===6){
-    // Mi Playlist - abrir portal
-    window.open('https://tawradio.github.io/sonoplayer-portal','_blank');
-    return;
-  }
+  if(i===6){showLoginModal();return;}
   if(i===7){localPlayer(true);return;}
   if(streamUrls[i]){
-    // Toggle play/stop
-    if(currentChannel===i && !globalAudio.paused){
-      globalAudio.pause();
-      currentChannel=-1;
-      document.querySelectorAll('.channel').forEach(c=>c.querySelector('.channel-play').textContent='▶');
-      return;
-    }
-    globalAudio.src=streamUrls[i];
-    globalAudio.play().catch(()=>{});
-    currentChannel=i;
-    document.querySelectorAll('.channel').forEach(c=>c.querySelector('.channel-play').textContent='▶');
-    b.querySelector('.channel-play').textContent='⏸';
+    if(currentChannel===i && !globalAudio.paused){stopDemo();return;}
+    playDemo(i,b);
   } else {
     const channelInfo=i===8?'Canciones infantiles originales.':i===9?'Música navideña especial.':'Canal próximamente disponible.';
     messages.channel=[channels[i][0].replace('<br>',' '),channelInfo];show('channel');
   }
-});const menu=document.querySelector('.menu-btn');function closeMenu(){document.querySelector('#nav').classList.remove('open');menu.setAttribute('aria-expanded','false')}menu.onclick=()=>{menu.setAttribute('aria-expanded',document.querySelector('#nav').classList.toggle('open'))};document.querySelectorAll('nav a,nav [data-dialog]').forEach(a=>a.addEventListener('click',closeMenu));
-</script></body></html>
+});
+function showLoginModal(){
+  content.innerHTML=`
+    <div id="login-tabs" style="display:flex;gap:0;margin-bottom:24px;border-bottom:1px solid #244350;">
+      <button onclick="switchTab('login')" id="tab-login" style="flex:1;background:none;border:none;color:var(--cyan);font-size:15px;font-weight:700;padding:12px;border-bottom:2px solid var(--cyan);cursor:pointer;">Ingresar</button>
+      <button onclick="switchTab('subscribe')" id="tab-subscribe" style="flex:1;background:none;border:none;color:#8a9aaa;font-size:15px;padding:12px;border-bottom:2px solid transparent;cursor:pointer;">Suscribirse</button>
+    </div>
+    <div id="panel-login">
+      <h2 style="font-size:22px;margin-bottom:16px;">Acceso Clientes</h2>
+      <p style="color:#c4d1df;margin-bottom:20px;">Ingresa con tu usuario y contraseña para acceder a tu playlist.</p>
+      <input id="login-user" type="text" placeholder="Usuario" style="width:100%;padding:12px;background:#06111d;border:1px solid #244350;border-radius:8px;color:white;margin-bottom:12px;font-size:15px;">
+      <input id="login-pass" type="password" placeholder="Contraseña" style="width:100%;padding:12px;background:#06111d;border:1px solid #244350;border-radius:8px;color:white;margin-bottom:16px;font-size:15px;">
+      <div id="login-err" style="color:#ff6b6b;font-size:13px;margin-bottom:12px;display:none;"></div>
+      <button onclick="doLogin()" class="btn primary" style="width:100%;justify-content:center;">INGRESAR</button>
+    </div>
+    <div id="panel-subscribe" style="display:none;">
+      <h2 style="font-size:22px;margin-bottom:16px;">Suscribirse a SONOplayer</h2>
+      <p style="color:#c4d1df;margin-bottom:20px;">Déjanos tus datos y te contactamos para activar tu plan.</p>
+      <input id="sub-name" type="text" placeholder="Nombre completo" style="width:100%;padding:12px;background:#06111d;border:1px solid #244350;border-radius:8px;color:white;margin-bottom:12px;font-size:15px;">
+      <input id="sub-email" type="email" placeholder="Correo electrónico" style="width:100%;padding:12px;background:#06111d;border:1px solid #244350;border-radius:8px;color:white;margin-bottom:12px;font-size:15px;">
+      <input id="sub-phone" type="tel" placeholder="Teléfono / WhatsApp" style="width:100%;padding:12px;background:#06111d;border:1px solid #244350;border-radius:8px;color:white;margin-bottom:12px;font-size:15px;">
+      <select id="sub-plan" style="width:100%;padding:12px;background:#06111d;border:1px solid #244350;border-radius:8px;color:white;margin-bottom:16px;font-size:15px;">
+        <option value="">Selecciona un plan</option>
+        <option value="basico">Plan Básico — $30.000 CLP/mes</option>
+        <option value="pro">Plan Pro — $60.000 CLP/mes</option>
+        <option value="drive">SONOplayer Drive — Gratuito</option>
+      </select>
+      <div id="sub-ok" style="color:#4DFFD4;font-size:13px;margin-bottom:12px;display:none;">✅ Mensaje enviado. Te contactaremos pronto.</div>
+      <button onclick="doSubscribe()" class="btn primary" style="width:100%;justify-content:center;">ENVIAR SOLICITUD</button>
+    </div>
+  `;
+  modal.showModal();
+}
 
+function switchTab(tab){
+  document.getElementById('panel-login').style.display=tab==='login'?'block':'none';
+  document.getElementById('panel-subscribe').style.display=tab==='subscribe'?'block':'none';
+  document.getElementById('tab-login').style.color=tab==='login'?'var(--cyan)':'#8a9aaa';
+  document.getElementById('tab-login').style.borderBottomColor=tab==='login'?'var(--cyan)':'transparent';
+  document.getElementById('tab-subscribe').style.color=tab==='subscribe'?'var(--cyan)':'#8a9aaa';
+  document.getElementById('tab-subscribe').style.borderBottomColor=tab==='subscribe'?'var(--cyan)':'transparent';
+}
+
+function doLogin(){
+  var user=document.getElementById('login-user').value.trim();
+  var pass=document.getElementById('login-pass').value;
+  var err=document.getElementById('login-err');
+  if(!user||!pass){err.textContent='Ingresa usuario y contraseña';err.style.display='block';return;}
+  err.style.display='none';
+  var fd=new FormData();fd.append('username',user);fd.append('password',pass);
+  fetch('https://sonoplayer.stumusicpro.cl/login',{method:'POST',body:fd})
+    .then(r=>r.json())
+    .then(d=>{
+      if(d.token){
+        localStorage.setItem('sp_token',d.token);
+        localStorage.setItem('sp_canal',d.canal);
+        modal.close();
+        window.open('https://tawradio.github.io/sonoplayer-portal','_blank');
+      } else {
+        err.textContent=d.detail||'Error al ingresar';err.style.display='block';
+      }
+    }).catch(()=>{err.textContent='Error de conexión';err.style.display='block';});
+}
+
+function doSubscribe(){
+  var name=document.getElementById('sub-name').value.trim();
+  var email=document.getElementById('sub-email').value.trim();
+  var phone=document.getElementById('sub-phone').value.trim();
+  var plan=document.getElementById('sub-plan').value;
+  if(!name||!email||!plan){return;}
+  // Enviar por WhatsApp
+  var msg='Hola, quiero suscribirme a SONOplayer.%0ANombre: '+encodeURIComponent(name)+'%0ACorreo: '+encodeURIComponent(email)+'%0ATeléfono: '+encodeURIComponent(phone)+'%0APlan: '+encodeURIComponent(plan);
+  document.getElementById('sub-ok').style.display='block';
+  setTimeout(()=>window.open('https://wa.me/56951679720?text='+msg,'_blank'),1000);
+}
+
+const menu=document.querySelector('.menu-btn');function closeMenu(){document.querySelector('#nav').classList.remove('open');menu.setAttribute('aria-expanded','false')}menu.onclick=()=>{menu.setAttribute('aria-expanded',document.querySelector('#nav').classList.toggle('open'))};document.querySelectorAll('nav a,nav [data-dialog]').forEach(a=>a.addEventListener('click',closeMenu));
+</script></body></html>
