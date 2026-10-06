@@ -119,17 +119,219 @@ function doLogin(){
     }).catch(()=>{err.textContent='Error de conexión';err.style.display='block';});
 }
 
+
+var regStep = 1;
+var regData = {};
+
 function doSubscribe(){
-  var name=document.getElementById('sub-name').value.trim();
-  var email=document.getElementById('sub-email').value.trim();
-  var phone=document.getElementById('sub-phone').value.trim();
-  var plan=document.getElementById('sub-plan').value;
-  if(!name||!email||!plan){return;}
-  // Enviar por WhatsApp
-  var msg='Hola, quiero suscribirme a SONOplayer.%0ANombre: '+encodeURIComponent(name)+'%0ACorreo: '+encodeURIComponent(email)+'%0ATeléfono: '+encodeURIComponent(phone)+'%0APlan: '+encodeURIComponent(plan);
-  document.getElementById('sub-ok').style.display='block';
-  setTimeout(()=>window.open('https://wa.me/56951679720?text='+msg,'_blank'),1000);
+  // Redirigir al formulario completo paso 1
+  showRegisterStep1();
 }
+
+function showRegisterStep1(){
+  content.innerHTML = `
+    <div style="max-width:480px;">
+      <div style="display:flex;gap:8px;margin-bottom:24px;">
+        <div style="flex:1;height:4px;background:var(--cyan);border-radius:2px;"></div>
+        <div style="flex:1;height:4px;background:#244350;border-radius:2px;" id="step2bar"></div>
+        <div style="flex:1;height:4px;background:#244350;border-radius:2px;" id="step3bar"></div>
+      </div>
+      <h2 style="font-size:20px;margin-bottom:6px;">Paso 1 — Elige tu plan</h2>
+      <p style="color:#c4d1df;margin-bottom:20px;font-size:14px;">Selecciona el plan que mejor se adapta a tu negocio.</p>
+      <div style="display:grid;gap:12px;">
+        <div onclick="selectPlan('basico',this)" class="plan-opt" style="border:2px solid #244350;border-radius:12px;padding:16px;cursor:pointer;transition:all .2s;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-weight:700;color:#E8C96A;margin-bottom:4px;">PLAN BÁSICO</div>
+              <div style="font-size:13px;color:#8a9aaa;">6 canales de música premium</div>
+            </div>
+            <div style="font-size:20px;font-weight:800;color:#00C8E8;">$30.000<span style="font-size:11px;color:#8a9aaa;">/mes</span></div>
+          </div>
+        </div>
+        <div onclick="selectPlan('pro',this)" class="plan-opt" style="border:2px solid #244350;border-radius:12px;padding:16px;cursor:pointer;transition:all .2s;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-weight:700;color:#E8C96A;margin-bottom:4px;">PLAN PRO ⭐</div>
+              <div style="font-size:13px;color:#8a9aaa;">6 canales + Mi Playlist + Multimedia</div>
+            </div>
+            <div style="font-size:20px;font-weight:800;color:#00C8E8;">$60.000<span style="font-size:11px;color:#8a9aaa;">/mes</span></div>
+          </div>
+        </div>
+        <div onclick="selectPlan('drive',this)" class="plan-opt" style="border:2px solid #244350;border-radius:12px;padding:16px;cursor:pointer;transition:all .2s;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-weight:700;color:#4DFFD4;margin-bottom:4px;">SONOPLAYER DRIVE</div>
+              <div style="font-size:13px;color:#8a9aaa;">Para vehículos · Con publicidad</div>
+            </div>
+            <div style="font-size:20px;font-weight:800;color:#4DFFD4;">GRATIS</div>
+          </div>
+        </div>
+      </div>
+      <div id="plan-err" style="color:#ff6b6b;font-size:13px;margin-top:12px;display:none;">Selecciona un plan</div>
+    </div>
+  `;
+  modal.showModal();
+}
+
+function selectPlan(plan, el){
+  regData.plan = plan;
+  document.querySelectorAll('.plan-opt').forEach(p=>p.style.borderColor='#244350');
+  el.style.borderColor = plan==='drive'?'#4DFFD4':'#E8C96A';
+  setTimeout(()=>showRegisterStep2(), 400);
+}
+
+function showRegisterStep2(){
+  content.innerHTML = `
+    <div style="max-width:480px;">
+      <div style="display:flex;gap:8px;margin-bottom:24px;">
+        <div style="flex:1;height:4px;background:#244350;border-radius:2px;"></div>
+        <div style="flex:1;height:4px;background:var(--cyan);border-radius:2px;"></div>
+        <div style="flex:1;height:4px;background:#244350;border-radius:2px;"></div>
+      </div>
+      <h2 style="font-size:20px;margin-bottom:6px;">Paso 2 — Tus datos</h2>
+      <p style="color:#c4d1df;margin-bottom:20px;font-size:14px;">Plan seleccionado: <strong style="color:#E8C96A;">${regData.plan.toUpperCase()}</strong></p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+        <input id="reg-nombre" type="text" placeholder="Nombre *" style="padding:10px;background:#06111d;border:1px solid #244350;border-radius:8px;color:white;font-size:14px;">
+        <input id="reg-apellido" type="text" placeholder="Apellido *" style="padding:10px;background:#06111d;border:1px solid #244350;border-radius:8px;color:white;font-size:14px;">
+      </div>
+      <input id="reg-empresa" type="text" placeholder="Nombre del negocio" style="width:100%;padding:10px;background:#06111d;border:1px solid #244350;border-radius:8px;color:white;font-size:14px;margin-bottom:10px;">
+      <input id="reg-telefono" type="tel" placeholder="Teléfono / WhatsApp *" style="width:100%;padding:10px;background:#06111d;border:1px solid #244350;border-radius:8px;color:white;font-size:14px;margin-bottom:10px;">
+      <select id="reg-pais" style="width:100%;padding:10px;background:#06111d;border:1px solid #244350;border-radius:8px;color:white;font-size:14px;margin-bottom:10px;" onchange="toggleRegiones()">
+        <option value="">País *</option>
+        <option value="Chile">Chile</option>
+        <option value="Argentina">Argentina</option>
+        <option value="Peru">Perú</option>
+        <option value="Colombia">Colombia</option>
+        <option value="Mexico">México</option>
+        <option value="Otro">Otro</option>
+      </select>
+      <div id="chile-fields" style="display:none;">
+        <select id="reg-region" style="width:100%;padding:10px;background:#06111d;border:1px solid #244350;border-radius:8px;color:white;font-size:14px;margin-bottom:10px;">
+          <option value="">Región *</option>
+          <option>Metropolitana</option><option>Valparaíso</option><option>Biobío</option>
+          <option>La Araucanía</option><option>Los Lagos</option><option>Coquimbo</option>
+          <option>Maule</option><option>O'Higgins</option><option>Antofagasta</option>
+          <option>Atacama</option><option>Tarapacá</option><option>Arica y Parinacota</option>
+          <option>Los Ríos</option><option>Aysén</option><option>Magallanes</option>
+        </select>
+        <input id="reg-comuna" type="text" placeholder="Comuna *" style="width:100%;padding:10px;background:#06111d;border:1px solid #244350;border-radius:8px;color:white;font-size:14px;margin-bottom:10px;">
+      </div>
+      <input id="reg-ciudad" type="text" placeholder="Ciudad *" style="width:100%;padding:10px;background:#06111d;border:1px solid #244350;border-radius:8px;color:white;font-size:14px;margin-bottom:10px;">
+      <input id="reg-direccion" type="text" placeholder="Dirección" style="width:100%;padding:10px;background:#06111d;border:1px solid #244350;border-radius:8px;color:white;font-size:14px;margin-bottom:10px;">
+      <div id="reg-err2" style="color:#ff6b6b;font-size:13px;margin-bottom:10px;display:none;"></div>
+      <div style="display:flex;gap:10px;">
+        <button onclick="showRegisterStep1()" style="flex:1;padding:12px;background:transparent;border:1px solid #244350;border-radius:8px;color:#8a9aaa;cursor:pointer;">← Volver</button>
+        <button onclick="goStep3()" class="btn primary" style="flex:2;justify-content:center;">Continuar →</button>
+      </div>
+    </div>
+  `;
+}
+
+function toggleRegiones(){
+  var pais = document.getElementById('reg-pais').value;
+  document.getElementById('chile-fields').style.display = pais==='Chile'?'block':'none';
+}
+
+function goStep3(){
+  var nombre = document.getElementById('reg-nombre').value.trim();
+  var apellido = document.getElementById('reg-apellido').value.trim();
+  var telefono = document.getElementById('reg-telefono').value.trim();
+  var pais = document.getElementById('reg-pais').value;
+  var ciudad = document.getElementById('reg-ciudad').value.trim();
+  var err = document.getElementById('reg-err2');
+  if(!nombre||!apellido||!telefono||!pais||!ciudad){
+    err.textContent='Completa los campos obligatorios (*)';err.style.display='block';return;
+  }
+  regData.nombre = nombre;
+  regData.apellido = apellido;
+  regData.empresa = document.getElementById('reg-empresa').value.trim();
+  regData.telefono = telefono;
+  regData.pais = pais;
+  regData.region = pais==='Chile'?(document.getElementById('reg-region')?document.getElementById('reg-region').value:''):'';
+  regData.comuna = pais==='Chile'?(document.getElementById('reg-comuna')?document.getElementById('reg-comuna').value:''):'';
+  regData.ciudad = ciudad;
+  regData.direccion = document.getElementById('reg-direccion').value.trim();
+  showRegisterStep3();
+}
+
+function showRegisterStep3(){
+  content.innerHTML = `
+    <div style="max-width:480px;">
+      <div style="display:flex;gap:8px;margin-bottom:24px;">
+        <div style="flex:1;height:4px;background:#244350;border-radius:2px;"></div>
+        <div style="flex:1;height:4px;background:#244350;border-radius:2px;"></div>
+        <div style="flex:1;height:4px;background:var(--cyan);border-radius:2px;"></div>
+      </div>
+      <h2 style="font-size:20px;margin-bottom:6px;">Paso 3 — Email y verificación</h2>
+      <p style="color:#c4d1df;margin-bottom:20px;font-size:14px;">Ingresa tu email para recibir tus credenciales de acceso.</p>
+      <input id="reg-email" type="email" placeholder="Email *" style="width:100%;padding:10px;background:#06111d;border:1px solid #244350;border-radius:8px;color:white;font-size:14px;margin-bottom:10px;">
+      <input id="reg-email2" type="email" placeholder="Confirmar email *" style="width:100%;padding:10px;background:#06111d;border:1px solid #244350;border-radius:8px;color:white;font-size:14px;margin-bottom:16px;">
+      <div id="reg-err3" style="color:#ff6b6b;font-size:13px;margin-bottom:10px;display:none;"></div>
+      <div id="reg-code-section" style="display:none;">
+        <p style="color:#4DFFD4;font-size:14px;margin-bottom:12px;">✅ Código enviado a tu email. Ingrésalo aquí:</p>
+        <input id="reg-code" type="text" placeholder="Código de 6 dígitos" maxlength="6" style="width:100%;padding:14px;background:#06111d;border:2px solid #E8C96A;border-radius:8px;color:#E8C96A;font-size:24px;text-align:center;letter-spacing:8px;margin-bottom:12px;">
+        <div id="reg-err-code" style="color:#ff6b6b;font-size:13px;margin-bottom:10px;display:none;"></div>
+        <button onclick="verifyCode()" class="btn primary" style="width:100%;justify-content:center;">VERIFICAR Y CREAR CUENTA</button>
+      </div>
+      <div id="reg-send-section">
+        <div style="display:flex;gap:10px;">
+          <button onclick="showRegisterStep2()" style="flex:1;padding:12px;background:transparent;border:1px solid #244350;border-radius:8px;color:#8a9aaa;cursor:pointer;">← Volver</button>
+          <button onclick="sendVerifyCode()" class="btn primary" style="flex:2;justify-content:center;" id="send-code-btn">ENVIAR CÓDIGO →</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function sendVerifyCode(){
+  var email = document.getElementById('reg-email').value.trim();
+  var email2 = document.getElementById('reg-email2').value.trim();
+  var err = document.getElementById('reg-err3');
+  if(!email||!email2){err.textContent='Ingresa tu email';err.style.display='block';return;}
+  if(email!==email2){err.textContent='Los emails no coinciden';err.style.display='block';return;}
+  err.style.display='none';
+  regData.email = email;
+  document.getElementById('send-code-btn').textContent='Enviando...';
+  var fd = new FormData();
+  fd.append('email',email);fd.append('email2',email2);
+  fd.append('nombre',regData.nombre);fd.append('apellido',regData.apellido);
+  fd.append('telefono',regData.telefono);fd.append('pais',regData.pais);
+  fd.append('region',regData.region||'');fd.append('comuna',regData.comuna||'');
+  fd.append('direccion',regData.direccion||regData.ciudad);fd.append('plan',regData.plan);
+  fetch('https://sonoplayer.stumusicpro.cl/register/send-code',{method:'POST',body:fd})
+    .then(r=>r.json())
+    .then(d=>{
+      document.getElementById('reg-send-section').style.display='none';
+      document.getElementById('reg-code-section').style.display='block';
+    }).catch(()=>{err.textContent='Error de conexión';err.style.display='block';document.getElementById('send-code-btn').textContent='ENVIAR CÓDIGO →';});
+}
+
+function verifyCode(){
+  var code = document.getElementById('reg-code').value.trim();
+  var err = document.getElementById('reg-err-code');
+  if(!code||code.length!==6){err.textContent='Ingresa el código de 6 dígitos';err.style.display='block';return;}
+  var fd = new FormData();
+  fd.append('email',regData.email);fd.append('code',code);
+  fetch('https://sonoplayer.stumusicpro.cl/register/verify',{method:'POST',body:fd})
+    .then(r=>r.json())
+    .then(d=>{
+      if(d.username){
+        content.innerHTML = `
+          <div style="text-align:center;padding:20px;">
+            <div style="font-size:48px;margin-bottom:16px;">🎉</div>
+            <h2 style="color:#4DFFD4;margin-bottom:12px;">¡Bienvenido a SONOplayer!</h2>
+            <p style="color:#c4d1df;margin-bottom:8px;">Tu cuenta <strong style="color:#E8C96A;">${d.username}</strong> fue creada.</p>
+            <p style="color:#8a9aaa;font-size:14px;margin-bottom:24px;">Revisa tu email — te enviamos las credenciales de acceso.</p>
+            <button onclick="modal.close()" class="btn primary" style="justify-content:center;">IR A MI PORTAL →</button>
+          </div>
+        `;
+        setTimeout(()=>window.open('https://tawradio.github.io/sonoplayer-portal','_blank'),1500);
+      } else {
+        err.textContent=d.detail||'Código incorrecto';err.style.display='block';
+      }
+    }).catch(()=>{err.textContent='Error de conexión';err.style.display='block';});
+}
+
 
 const menu=document.querySelector('.menu-btn');function closeMenu(){document.querySelector('#nav').classList.remove('open');menu.setAttribute('aria-expanded','false')}menu.onclick=()=>{menu.setAttribute('aria-expanded',document.querySelector('#nav').classList.toggle('open'))};document.querySelectorAll('nav a,nav [data-dialog]').forEach(a=>a.addEventListener('click',closeMenu));
 </script></body></html>
