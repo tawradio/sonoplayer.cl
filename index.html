@@ -95,8 +95,10 @@ input[type=file]{width:100%;margin:12px 0;font-size:14px}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
 
 /* ── MODAL DE ACCESO (Login / Registro) ── */
-#modal-access{max-width:480px;padding:0;overflow:hidden}
-#modal-access .close{position:absolute;top:16px;right:20px;z-index:10;font-size:24px;color:#aaa}
+#modal-access-overlay{display:none;position:fixed;inset:0;z-index:9999;background:#000c;backdrop-filter:blur(6px);align-items:center;justify-content:center}
+#modal-access-overlay.open{display:flex}
+#modal-access{max-width:480px;width:92%;border:1px solid var(--cyan);border-radius:18px;background:#06111d;color:white;padding:0;overflow:hidden;position:relative}
+#modal-access .close{position:absolute;top:16px;right:20px;z-index:10;font-size:24px;color:#aaa;background:none;border:0;cursor:pointer}
 .modal-tabs{display:flex;border-bottom:1px solid #1a3a4a}
 .modal-tab{flex:1;padding:16px;background:none;border:0;color:#8fa0b0;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s}
 .modal-tab.active{color:white;border-bottom:2px solid var(--cyan);background:#071520}
@@ -326,14 +328,16 @@ input[type=file]{width:100%;margin:12px 0;font-size:14px}
 </dialog>
 
 <!-- MODAL ACCESO (login / registro) -->
-<dialog id="modal-access">
-  <button class="close" id="close-access" aria-label="Cerrar">×</button>
-  <div class="modal-tabs">
-    <button class="modal-tab active" id="tab-login" onclick="switchTab('login')">Ingresar</button>
-    <button class="modal-tab" id="tab-register" onclick="switchTab('register')">Suscribirse</button>
+<div id="modal-access-overlay">
+  <div id="modal-access">
+    <button class="close" id="close-access" aria-label="Cerrar">×</button>
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="tab-login" onclick="switchTab('login')">Ingresar</button>
+      <button class="modal-tab" id="tab-register" onclick="switchTab('register')">Suscribirse</button>
+    </div>
+    <div class="modal-body" id="access-body"></div>
   </div>
-  <div class="modal-body" id="access-body"></div>
-</dialog>
+</div>
 
 <script>
 /* ════════════════════════════════════════
@@ -466,10 +470,14 @@ document.querySelectorAll('[data-channel]').forEach(b=>b.onclick=()=>{
 /* ════════════════════════════════════════
    MODAL DE ACCESO (Login / Registro 3 pasos)
 ════════════════════════════════════════ */
-const modalAccess=document.querySelector('#modal-access');
+const modalAccessOverlay=document.querySelector('#modal-access-overlay');
+const modalAccess={
+  showModal:()=>modalAccessOverlay.classList.add('open'),
+  close:()=>modalAccessOverlay.classList.remove('open')
+};
 const accessBody=document.querySelector('#access-body');
 document.querySelector('#close-access').onclick=()=>modalAccess.close();
-modalAccess.addEventListener('click',e=>{const r=modalAccess.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)modalAccess.close()});
+modalAccessOverlay.addEventListener('click',e=>{if(e.target===modalAccessOverlay)modalAccess.close();});
 
 let selectedPlan='business';
 let regData={};
