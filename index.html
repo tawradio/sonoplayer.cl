@@ -268,7 +268,7 @@ input[type=file]{width:100%;margin:12px 0;font-size:14px}
         <li>1 dispositivo</li>
         <li>Soporte por email</li>
       </ul>
-      <button class="btn-suscribir" data-plan="basico" onclick="abrirRegistro('basico')">Suscribirme</button>
+      <button class="btn-suscribir" data-plan="basico">Suscribirme</button>
     </div>
     <div class="precio-card destacado">
       <div class="badge">MÁS POPULAR</div>
@@ -282,7 +282,7 @@ input[type=file]{width:100%;margin:12px 0;font-size:14px}
         <li>Sono Kids + Navidad</li>
         <li>Soporte prioritario</li>
       </ul>
-      <button class="btn-suscribir" data-plan="business" onclick="abrirRegistro('business')">Suscribirme</button>
+      <button class="btn-suscribir" data-plan="business">Suscribirme</button>
     </div>
     <div class="precio-card">
       <h3>Premium</h3>
@@ -296,7 +296,7 @@ input[type=file]{width:100%;margin:12px 0;font-size:14px}
         <li>Estadísticas de uso</li>
         <li>Soporte 24/7</li>
       </ul>
-      <button class="btn-suscribir" data-plan="premium" onclick="abrirRegistro('premium')">Suscribirme</button>
+      <button class="btn-suscribir" data-plan="premium">Suscribirme</button>
     </div>
   </div>
 </section>
@@ -750,6 +750,12 @@ function closeMenu(){document.querySelector('#nav').classList.remove('open');men
 menu.onclick=()=>{menu.setAttribute('aria-expanded',document.querySelector('#nav').classList.toggle('open'));};
 document.querySelectorAll('nav a,nav [data-dialog],nav [data-detail]').forEach(a=>a.addEventListener('click',closeMenu));
 document.getElementById('nav-precios').addEventListener('click',closeMenu);
+
+/* ── Botones Suscribirme ── */
+document.querySelectorAll('.btn-suscribir').forEach(b=>b.addEventListener('click',function(e){
+  e.stopPropagation();
+  abrirRegistro(this.dataset.plan);
+}));
 </script>
 </body>
 </html>
