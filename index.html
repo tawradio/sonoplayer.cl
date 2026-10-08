@@ -95,8 +95,8 @@ input[type=file]{width:100%;margin:12px 0;font-size:14px}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
 
 /* ── MODAL DE ACCESO (Login / Registro) ── */
-#modal-access-overlay{display:none;position:fixed;inset:0;z-index:9999;background:#000c;backdrop-filter:blur(6px);align-items:center;justify-content:center}
-#modal-access-overlay.open{display:flex}
+#modal-access-overlay{visibility:hidden;pointer-events:none;position:fixed;inset:0;z-index:9999;background:#000c;backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s}
+#modal-access-overlay.open{visibility:visible;pointer-events:all;opacity:1}
 #modal-access{max-width:480px;width:92%;border:1px solid var(--cyan);border-radius:18px;background:#06111d;color:white;padding:0;overflow:hidden;position:relative}
 #modal-access .close{position:absolute;top:16px;right:20px;z-index:10;font-size:24px;color:#aaa;background:none;border:0;cursor:pointer}
 .modal-tabs{display:flex;border-bottom:1px solid #1a3a4a}
