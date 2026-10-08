@@ -1,1 +1,761 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SonoPlayer — Música Inteligente</title>
+<meta name="description" content="La música inteligente para todos los espacios. SonoPlayer Business y Drive.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23000914'/%3E%3Cpath d='M12 8L24 16L12 24Z' fill='%2300cae8'/%3E%3C/svg%3E">
+<style>
+:root{--bg:#020913;--cyan:#00c9e9;--line:#155167;--muted:#c4d1df}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:90px;color-scheme:dark}
+body{margin:0;background:var(--bg);color:white;font:16px/1.45 Arial,sans-serif}
+a{color:inherit;text-decoration:none}button,input{font:inherit}button{cursor:pointer}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid white;outline-offset:4px}
+button{color:inherit}
+header{height:88px;background:#020810;border-bottom:1px solid #244350}
+.container{max-width:1240px;margin:auto;padding:0 24px}
+.header-inner{height:100%;display:flex;align-items:center;justify-content:space-between;gap:28px}
+.logo{width:285px;height:76px;object-fit:contain}
+.nav{display:flex;gap:28px;align-items:center;font-size:14px}
+.nav a{padding:12px 0}.nav a:first-child{border-bottom:2px solid var(--cyan)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;border:1px solid var(--cyan);border-radius:32px;background:#020a13b8;padding:15px 24px;color:white;font-size:14px;font-weight:700;letter-spacing:.3px;min-height:48px}
+.btn.primary{background:var(--cyan);color:#00131c;border-color:#30e4ff}
+.client{white-space:nowrap;font-weight:400;padding:10px 22px}
+.hero{position:relative;min-height:530px;border-bottom:1px solid var(--cyan);overflow:hidden;background:#020913}
+.hero-art{position:absolute;right:0;top:0;width:65%;height:100%;object-fit:cover;object-position:right center}
+.hero:after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,#020913 0%,#020913 25%,#020913ed 34%,#02091390 44%,transparent 62%),linear-gradient(0deg,#003346aa,transparent 15%);pointer-events:none}
+.hero .container{position:relative;z-index:1;min-height:530px;display:flex;align-items:center}
+.hero-copy{max-width:590px;padding:35px 0 45px}
+h1{font-size:clamp(36px,4.2vw,54px);line-height:1.04;letter-spacing:-1px;margin:0 0 23px;max-width:570px}
+h1 span{color:var(--cyan)}
+.hero-copy p{font-size:18px;line-height:1.6;max-width:490px;margin:0 0 20px}
+.genres-line{color:#a7edfa;font-size:12px;font-weight:700;letter-spacing:1.6px;margin-bottom:34px}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+.play-icon{display:inline-flex;width:23px;height:23px;border-radius:50%;background:white;color:var(--cyan);align-items:center;justify-content:center;font-size:13px}
+.solutions{padding:14px 16px 0;max-width:1280px;margin:auto}
+.solution-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.solution{border:1px solid #174456;border-radius:16px;overflow:hidden;position:relative;background:#030a14;min-height:470px;display:flex;flex-direction:column}
+.solution-art{position:absolute;inset:0 0 0 auto;width:60%;height:100%;object-fit:cover;object-position:center}
+.solution:after{position:absolute;inset:0;content:'';background:linear-gradient(90deg,#030913 0%,#030913ea 30%,#03091390 62%,#03091305 100%),linear-gradient(0deg,#030913 0%,#030913cc 20%,transparent 55%),linear-gradient(180deg,#03091390,transparent 35%)}
+.solution-content,.sector-icons{position:relative;z-index:1}
+.solution-content{padding:24px 36px 12px;flex:1}
+.solution-brand{display:flex;align-items:center;gap:24px;margin-bottom:18px}
+.symbol{width:66px;height:100px;object-fit:contain;mix-blend-mode:screen}
+.wordmark{font-size:26px;letter-spacing:6px;line-height:1.35}
+.wordmark b{display:block;font-size:30px;letter-spacing:4px}
+.drive .wordmark b{color:var(--cyan)}
+h2{font-size:21px;font-weight:500;line-height:1.25;margin:10px 0 14px}
+.solution p{font-size:16px;max-width:380px;margin:0 0 17px}
+.solution .btn{padding:12px 28px;min-width:190px;border-color:#cbd7dd}
+.solution .btn.primary{border-color:var(--cyan)}
+.sector-icons{display:flex;justify-content:space-between;gap:10px;border-top:1px solid #ffffff12;background:#02091380;padding:18px 23px 21px}
+.sector{text-align:center;font-size:12px;line-height:1.15;flex:1}
+.sector svg{width:29px;height:34px;display:block;margin:0 auto 8px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.channels-section{padding:25px 24px 42px;max-width:1280px;margin:auto}
+.section-heading{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:17px}
+.section-heading h2{margin:0;font-size:18px;letter-spacing:3px;font-weight:700}
+.text-link{background:none;border:0;color:var(--cyan);font-size:14px;padding:0}
+.channel-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:13px}
+.channel{overflow:hidden;border:1px solid #18556a;border-radius:13px;background:#020811;color:white;padding:0 0 15px;text-align:center;display:flex;flex-direction:column;align-items:center;transition:transform .2s,border-color .2s}
+.channel:hover{transform:translateY(-4px);border-color:var(--cyan)}
+.channel img{width:100%;height:113px;object-fit:cover;mask-image:linear-gradient(#000 70%,transparent 100%)}
+.channel-play{border:2px solid white;border-radius:50%;width:25px;height:25px;font-size:13px;display:flex;align-items:center;justify-content:center;margin-top:-14px;position:relative;z-index:1}
+.channel strong{display:block;font-size:16px;line-height:1.15;margin:12px 8px 9px;min-height:38px}
+.channel small{font-size:12px;line-height:1.2;padding:0 8px;min-height:30px}
+.features{border-top:1px solid var(--cyan);border-bottom:1px solid #0c6179;box-shadow:0 -5px 25px #00c9e922;background:linear-gradient(90deg,#010712,#03101b,#010712)}
+.features .container{display:grid;grid-template-columns:repeat(5,1fr);padding-top:25px;padding-bottom:25px;gap:20px}
+.feature{display:flex;align-items:center;gap:14px;font-size:14px}
+.feature svg{width:43px;height:43px;fill:none;stroke:var(--cyan);stroke-width:1.6;flex-shrink:0}
+.banner{display:block;width:100%;background:#091725;border-bottom:1px solid #c2cbdc}
+.banner img{width:100%;max-height:180px;object-fit:cover;display:block}
+.footer{padding:15px 24px;display:flex;align-items:center;gap:35px;justify-content:space-between;max-width:1280px;margin:auto;font-size:12px}
+.footer .logo{width:230px;height:65px}
+.footer-links{display:flex;flex-wrap:wrap;gap:15px;align-items:center}
+.footer button{background:none;border:0;padding:0;font-size:12px}
+.footer .country{white-space:nowrap}
+.details{background:#06111d;border-bottom:1px solid #194657;padding:40px 0}
+.details[hidden]{display:none}.details h2{font-size:28px}
+.details p{max-width:850px;color:var(--muted);line-height:1.7}
+.close-detail{float:right}.menu-btn{display:none}
+.season-badge{font-size:11px;color:#c9f2fa;background:#00c9e914;border:1px solid #00c9e940;border-radius:20px;padding:4px 9px;margin-top:12px}
+.nav .text-link{color:white;font-size:inherit;font-weight:400}
+.client svg{width:16px;height:16px;fill:currentColor}
 
+/* ── MODAL BASE ── */
+dialog{max-width:560px;width:92%;border:1px solid var(--cyan);border-radius:18px;background:#06111d;color:white;padding:30px}
+dialog::backdrop{background:#000c;backdrop-filter:blur(6px)}
+dialog h2{font-size:26px}dialog p{color:#c9d5e4;line-height:1.6}
+.close{float:right;background:none;border:0;font-size:26px}
+audio,video{width:100%;margin-top:20px}
+input[type=file]{width:100%;margin:12px 0;font-size:14px}
+.file-list{display:flex;gap:8px;flex-wrap:wrap}
+.file-list button{font-size:13px;max-width:100%;overflow-wrap:anywhere}
+.notice{font-size:13px;color:#8fd8e8;margin-top:12px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+
+/* ── MODAL DE ACCESO (Login / Registro) ── */
+#modal-access-overlay{display:none;position:fixed;inset:0;z-index:9999;background:#000c;backdrop-filter:blur(6px);align-items:center;justify-content:center}
+#modal-access-overlay.open{display:flex}
+#modal-access{max-width:480px;width:92%;border:1px solid var(--cyan);border-radius:18px;background:#06111d;color:white;padding:0;overflow:hidden;position:relative}
+#modal-access .close{position:absolute;top:16px;right:20px;z-index:10;font-size:24px;color:#aaa;background:none;border:0;cursor:pointer}
+.modal-tabs{display:flex;border-bottom:1px solid #1a3a4a}
+.modal-tab{flex:1;padding:16px;background:none;border:0;color:#8fa0b0;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s}
+.modal-tab.active{color:white;border-bottom:2px solid var(--cyan);background:#071520}
+.modal-body{padding:28px 30px 30px}
+.form-field{margin-bottom:16px}
+.form-field label{display:block;font-size:13px;color:#8fa0b0;margin-bottom:6px}
+.form-field input,.form-field select{width:100%;background:#0a1e2c;border:1px solid #1a3a4a;border-radius:10px;color:white;padding:12px 14px;font-size:14px;transition:border-color .2s}
+.form-field input:focus,.form-field select:focus{outline:none;border-color:var(--cyan)}
+.form-field .pw-wrap{position:relative}
+.form-field .pw-wrap input{padding-right:44px}
+.form-field .pw-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:0;color:#5a7a8a;font-size:18px;cursor:pointer;padding:4px;line-height:1}
+.btn-full{width:100%;padding:14px;border-radius:12px;font-size:15px;font-weight:700;border:none;background:var(--cyan);color:#00131c;cursor:pointer;margin-top:8px;transition:opacity .2s}
+.btn-full:hover{opacity:.9}
+.btn-full.outline{background:transparent;border:1px solid var(--cyan);color:var(--cyan)}
+.form-error{color:#ff6b7a;font-size:13px;margin-top:6px;display:none}
+.step-indicator{display:flex;gap:8px;justify-content:center;margin-bottom:24px}
+.step-dot{width:8px;height:8px;border-radius:50%;background:#1a3a4a;transition:background .3s}
+.step-dot.active{background:var(--cyan)}
+.step-dot.done{background:#1a7a60}
+.plans-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.plan-card{border:2px solid #1a3a4a;border-radius:12px;padding:14px;cursor:pointer;transition:all .2s;text-align:center}
+.plan-card:hover,.plan-card.selected{border-color:var(--cyan);background:#071c28}
+.plan-card h3{font-size:16px;margin:0 0 4px}
+.plan-card .price{font-size:22px;font-weight:700;color:var(--cyan)}
+.plan-card .price span{font-size:12px;font-weight:400;color:#8fa0b0}
+.plan-card ul{text-align:left;font-size:12px;color:#8fa0b0;margin:8px 0 0;padding:0 0 0 14px}
+.plan-card ul li{margin-bottom:3px}
+.plan-free{border-color:#2a5a3a}
+.plan-free .price{color:#4dffa0}
+.regiones-fields{display:none}
+.regiones-fields.visible{display:block}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.verify-hint{font-size:13px;color:#8fa0b0;margin-bottom:16px;line-height:1.5}
+.code-inputs{display:flex;gap:10px;justify-content:center;margin:16px 0}
+.code-inputs input{width:46px;height:54px;text-align:center;font-size:22px;font-weight:700;background:#0a1e2c;border:1px solid #1a3a4a;border-radius:10px;color:white}
+.code-inputs input:focus{outline:none;border-color:var(--cyan)}
+.resend-link{background:none;border:0;color:var(--cyan);font-size:13px;cursor:pointer;padding:0;margin-top:4px;display:block;text-align:center}
+.success-box{text-align:center;padding:20px 0}
+.success-box .checkmark{font-size:52px;margin-bottom:12px}
+.success-box h3{font-size:20px;margin-bottom:8px}
+.success-box p{font-size:14px;color:#8fa0b0;line-height:1.5}
+
+/* ── PRECIOS SECTION ── */
+.precios-section{padding:50px 24px;max-width:1280px;margin:auto}
+.precios-section h2{text-align:center;font-size:28px;margin-bottom:8px}
+.precios-section .subtitle{text-align:center;color:#8fa0b0;font-size:15px;margin-bottom:40px}
+.precios-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.precio-card{border:1px solid #174456;border-radius:16px;padding:28px 24px;background:#030a14;position:relative;text-align:center}
+.precio-card.destacado{border-color:var(--cyan);background:#04111c}
+.precio-card .badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--cyan);color:#00131c;font-size:11px;font-weight:700;padding:4px 14px;border-radius:20px;white-space:nowrap}
+.precio-card h3{font-size:20px;margin:0 0 6px}
+.precio-card .amount{font-size:36px;font-weight:700;color:var(--cyan);margin:12px 0 4px}
+.precio-card .amount span{font-size:14px;font-weight:400;color:#8fa0b0}
+.precio-card .trial{font-size:12px;color:#4dffa0;margin-bottom:16px}
+.precio-card ul{text-align:left;font-size:13px;color:#8fa0b0;margin:0 0 20px;padding:0;list-style:none}
+.precio-card ul li{padding:5px 0;border-bottom:1px solid #0d2030}
+.precio-card ul li::before{content:'✓  ';color:var(--cyan)}
+.precio-card .btn-suscribir{width:100%;padding:12px;border-radius:10px;font-size:14px;font-weight:700;border:1px solid var(--cyan);background:transparent;color:var(--cyan);cursor:pointer;transition:all .2s}
+.precio-card.destacado .btn-suscribir{background:var(--cyan);color:#00131c;border-color:transparent}
+.precio-card .btn-suscribir:hover{opacity:.8}
+
+@media(max-width:1100px){.logo{width:245px}.nav{gap:20px;font-size:12px}.header-inner{gap:18px}.client{font-size:12px;padding:10px 17px}.container{padding-inline:30px}.hero{min-height:435px}.hero .container{min-height:435px}.hero-copy{max-width:505px}h1{font-size:43px}.hero-copy p{font-size:16px;max-width:440px}.hero-actions .btn{font-size:12px;padding:15px 22px}.solution{min-height:395px}.solution-content{padding:18px 30px 10px}.wordmark{font-size:23px;letter-spacing:5px}.wordmark b{font-size:29px}.symbol{height:85px;width:60px}.solution h2{font-size:18px}.solution p{font-size:14px;max-width:330px}.sector-icons{padding:16px 16px}.sector{font-size:11px}.channel-grid{gap:10px}.channel img{height:94px}.channel strong{font-size:14px}.channel small{font-size:11px}.features .container{gap:20px;padding-inline:35px}.feature{font-size:12px;gap:12px}.feature svg{width:37px}.footer{gap:25px}.footer .logo{width:230px}.precios-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:850px){header{height:78px}.nav{display:none}.menu-btn{display:block;background:none;border:1px solid var(--cyan);border-radius:7px;padding:8px 12px}.client{margin-left:auto}.nav.open{display:flex;position:absolute;top:78px;left:0;right:0;background:#06111d;padding:20px;flex-wrap:wrap;z-index:10;font-size:15px}.hero-copy{max-width:460px}.hero-art{width:80%;opacity:.85}.hero:after{background:linear-gradient(90deg,#020913 0%,#020913e8 32%,#02091388 58%,#02091320 100%)}.solution-content{padding-inline:22px}.wordmark{font-size:18px;letter-spacing:3px}.wordmark b{font-size:24px}.solution-brand{gap:15px}.channel-grid{grid-template-columns:repeat(4,1fr)}.channel img{height:120px}.channel strong{font-size:16px}.channel small{font-size:13px}.sector-icons{gap:5px;padding-inline:12px}.sector{font-size:10px}.features .container{grid-template-columns:repeat(3,1fr)}.footer{flex-wrap:wrap}.feature{font-size:14px}.banner img{min-height:100px}.precios-grid{grid-template-columns:1fr}.modal-body{padding:20px}}
+@media(max-width:580px){.container{padding-inline:20px}.logo{width:180px}.header-inner{gap:10px}.client{display:none}.hero,.hero .container{min-height:590px}.hero .container{align-items:flex-end}.hero-art{width:100%;height:100%;object-position:80% top}.hero:after{background:linear-gradient(0deg,#020913 0%,#020913ee 25%,#020913ae 50%,#02091310 90%)}.hero-copy{padding:200px 0 30px;max-width:none}h1{font-size:36px;max-width:420px}.hero-copy p{font-size:16px}.genres-line{font-size:10px;letter-spacing:1px;margin-bottom:20px}.hero-actions{gap:10px}.hero-actions .btn{padding:13px 18px;font-size:11px}.solution-grid{grid-template-columns:1fr}.solutions{padding-inline:12px}.solution{min-height:425px}.wordmark{font-size:24px;letter-spacing:4px}.wordmark b{font-size:29px}.symbol{width:62px}.solution p{font-size:16px;max-width:300px}.solution h2{font-size:20px}.sector{font-size:11px}.solution-art{width:65%}.channel-grid{grid-template-columns:repeat(2,1fr);gap:14px}.channel img{height:140px}.channel strong{min-height:0}.channels-section{padding-inline:16px}.section-heading h2{font-size:15px;letter-spacing:2px}.text-link{font-size:12px}.features .container{grid-template-columns:1fr 1fr;padding-inline:20px;gap:22px}.feature{font-size:13px}.banner img{height:auto;min-height:0}.footer{gap:15px;padding:20px}.footer-links{font-size:12px;line-height:1.8}.footer .logo{width:200px}.notice{font-size:12px}.plans-grid{grid-template-columns:1fr}.two-col{grid-template-columns:1fr}.modal-body{padding:18px 16px}.code-inputs input{width:40px;height:48px;font-size:18px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.channel{transition:none}}
+</style>
+</head>
+<body>
+<header>
+  <div class="container header-inner">
+    <a href="#inicio"><img src="logo-trim.webp" class="logo" alt="SonoPlayer — Música Inteligente"></a>
+    <nav class="nav" id="nav">
+      <a href="#inicio">Inicio</a>
+      <a href="#musica">Música</a>
+      <a href="#soluciones">Soluciones</a>
+      <button class="text-link" id="nav-precios">Precios</button>
+      <button class="text-link" data-detail="nosotros">Nosotros</button>
+      <button class="text-link" data-dialog="contact">Contacto</button>
+      <button class="text-link" data-dialog="blog">Blog</button>
+    </nav>
+    <button class="btn client" id="btn-acceso">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 22v-4c0-9 16-9 16 0v4Z"/></svg>
+      Acceso Clientes
+    </button>
+    <button class="menu-btn" aria-expanded="false" aria-controls="nav">Menú</button>
+  </div>
+</header>
+
+<main>
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <img class="hero-art" src="hero-reference.webp" alt="Restaurante al atardecer, música ambiental">
+  <div class="container">
+    <div class="hero-copy">
+      <h1>La música<br>inteligente para<br><span>todos los espacios</span></h1>
+      <p>SonoPlayer es una plataforma de música creada con inteligencia artificial, diseñada para ambientar, conectar y mejorar la experiencia en negocios y en tus viajes.</p>
+      <div class="genres-line">AMBIENTAL · POP · ROCK · OLDIES · RADIO · MULTIMEDIA</div>
+      <div class="hero-actions">
+        <button class="btn primary" data-scroll="musica"><span class="play-icon">▶</span> ESCUCHAR SONOPLAYER</button>
+        <a class="btn" href="#soluciones">CONOCE NUESTRO SERVICIO</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUCIONES -->
+<section class="solutions" id="soluciones">
+  <div class="solution-grid">
+    <article class="solution">
+      <img class="solution-art" src="business-reference.webp" alt="Restaurante con iluminación cálida">
+      <div class="solution-content">
+        <div class="solution-brand">
+          <img class="symbol" src="symbol.webp" alt="">
+          <div class="wordmark">SONOPLAYER<b>BUSINESS</b></div>
+        </div>
+        <h2>Música Inteligente para tu negocio</h2>
+        <p>Ambientes únicos, clientes más felices. La mejor selección musical para restaurantes, hoteles, cafeterías, bares, retail, supermercados y muchos más.</p>
+        <button class="btn" data-detail="business">VER MÁS</button>
+      </div>
+      <div class="sector-icons" id="business-icons"></div>
+    </article>
+    <article class="solution drive">
+      <img class="solution-art" src="drive-reference.webp" alt="Carretera entre montañas">
+      <div class="solution-content">
+        <div class="solution-brand">
+          <img class="symbol" src="symbol.webp" alt="">
+          <div class="wordmark">SONOPLAYER<b>DRIVE</b></div>
+        </div>
+        <h2>Música, información y descubrimiento mientras conduces</h2>
+        <p>Disfruta de música y noticias durante tu viaje. Próximamente, clima y lugares de interés con narración por voz. ¡Explora Chile y mucho más!</p>
+        <button class="btn primary" data-dialog="drive">ESCUCHAR GRATIS</button>
+        <div class="notice">Próximamente · Gratis con publicidad</div>
+      </div>
+      <div class="sector-icons" id="drive-icons"></div>
+    </article>
+  </div>
+</section>
+
+<section class="details" id="details" hidden>
+  <div class="container">
+    <button class="text-link close-detail">Cerrar ×</button>
+    <div id="detail-content"></div>
+  </div>
+</section>
+
+<!-- CANALES -->
+<section class="channels-section" id="musica">
+  <div class="section-heading">
+    <h2>NUESTROS CANALES</h2>
+    <button class="text-link" data-dialog="genres">Ver todos los géneros</button>
+  </div>
+  <div class="channel-grid" id="channels"></div>
+</section>
+
+<!-- PRECIOS -->
+<section class="precios-section" id="precios">
+  <h2>Planes y Precios</h2>
+  <p class="subtitle">Elige el plan que se adapta a tu negocio. Prueba gratis 15 días.</p>
+  <div class="precios-grid">
+    <div class="precio-card">
+      <h3>Básico</h3>
+      <div class="amount">$9.990 <span>/mes</span></div>
+      <div class="trial">✓ 15 días gratis</div>
+      <ul>
+        <li>3 canales de música</li>
+        <li>Mi Playlist (MP3)</li>
+        <li>1 dispositivo</li>
+        <li>Soporte por email</li>
+      </ul>
+      <button class="btn-suscribir" data-plan="basico">Suscribirme</button>
+    </div>
+    <div class="precio-card destacado">
+      <div class="badge">MÁS POPULAR</div>
+      <h3>Business</h3>
+      <div class="amount">$19.990 <span>/mes</span></div>
+      <div class="trial">✓ 15 días gratis</div>
+      <ul>
+        <li>10 canales completos</li>
+        <li>Mi Playlist + Multimedia</li>
+        <li>3 dispositivos</li>
+        <li>Sono Kids + Navidad</li>
+        <li>Soporte prioritario</li>
+      </ul>
+      <button class="btn-suscribir" data-plan="business">Suscribirme</button>
+    </div>
+    <div class="precio-card">
+      <h3>Premium</h3>
+      <div class="amount">$34.990 <span>/mes</span></div>
+      <div class="trial">✓ 15 días gratis</div>
+      <ul>
+        <li>10 canales + Radio</li>
+        <li>Mi Playlist ilimitada</li>
+        <li>Dispositivos ilimitados</li>
+        <li>Panel de administración</li>
+        <li>Estadísticas de uso</li>
+        <li>Soporte 24/7</li>
+      </ul>
+      <button class="btn-suscribir" data-plan="premium">Suscribirme</button>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="container" id="features"></div>
+</section>
+
+<a class="banner" href="#soluciones"><img src="banner-reference.webp" alt="SonoPlayer. Para tu negocio. Para tu viaje. Para tu mundo." loading="lazy"></a>
+</main>
+
+<footer class="footer">
+  <a href="#inicio"><img src="logo-trim.webp" class="logo" alt="SonoPlayer — Música Inteligente"></a>
+  <div class="footer-links">
+    <a href="#inicio">Inicio</a><span>|</span>
+    <button id="footer-precios">Precios</button><span>|</span>
+    <button data-dialog="terms">Términos y condiciones</button><span>|</span>
+    <button data-dialog="contact">Contacto</button><span>|</span>
+    <button data-detail="nosotros">Nosotros</button>
+  </div>
+  <span class="country">🇨🇱 &nbsp; sonoplayer.cl</span>
+</footer>
+
+<!-- MODAL GENÉRICO -->
+<dialog id="modal">
+  <button class="close" aria-label="Cerrar">×</button>
+  <div id="modal-content"></div>
+</dialog>
+
+<!-- MODAL ACCESO (login / registro) -->
+<div id="modal-access-overlay">
+  <div id="modal-access">
+    <button class="close" id="close-access" aria-label="Cerrar">×</button>
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="tab-login" onclick="switchTab('login')">Ingresar</button>
+      <button class="modal-tab" id="tab-register" onclick="switchTab('register')">Suscribirse</button>
+    </div>
+    <div class="modal-body" id="access-body"></div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════
+   DATOS ESTÁTICOS
+════════════════════════════════════════ */
+const BASE = 'https://sonoplayer.stumusicpro.cl';
+
+const channels=[
+  ['Ambiental<br>Suave','Instrumental lenta','manana'],
+  ['Ambiental<br>Media','Instrumental<br>ritmo medio','almuerzo'],
+  ['Música<br>M Pop','Pop latino','pop'],
+  ['Rock','Electrónica y rock<br>desde los 70','rock'],
+  ['Oldies','60 · 70 · 80 · 90','oldies'],
+  ['All Music','De todo tipo<br>Radio','allmusic'],
+  ['Mi Playlist','Tu propia música<br>(MP3)',null],
+  ['Multimedia','Música + Video<br>MP4',null],
+  ['Sono Kids','Música para pequeños<br>grandes momentos','sonokids'],
+  ['Navidad','El sonido de una<br>época especial','navidad']
+];
+
+const iconPaths={restaurant:'M7 2v12m-3-12v8c0 3 6 3 6 0V2M7 14v18M19 2c-6 7-6 14 0 14V2m0 14v16',hotel:'M2 29V10m0 13h30v6M7 12h7v8H7zM17 14h10c3 0 5 2 5 6v3H2',coffee:'M4 11h21v7c0 14-21 14-21 0v-7zm21 2h5c7 7-1 10-5 9M2 31h27M9 2v8m7-5v5m6-5v5',bar:'M3 3h28L17 17 3 3zm14 14v13m-7 2h14',retail:'M5 10h25l-2 21H7L5 10zm7 0V6c0-7 10-7 10 0v4',cart:'M2 2h5l5 22h16l5-15H9m4 21h1m12 0h1M16 12v7m6-7v7',music:'M11 24V5l20-3v21M11 7l20-3M11 24c0 7-11 7-11 1 0-5 8-6 11-1zm20-1c0 7-11 7-11 1 0-5 8-6 11-1z',news:'M4 3h26v29H4V3zm5 5h8v10H9V8zm12 0h5m-5 5h5M9 23h17M9 28h17',weather:'M8 18c-1-10 18-13 21-2M15 2v4M1 10l4 3m23-6 3-3M11 21c-12 0-9 13-2 13h15c12 0 10-13 1-12-3-7-12-7-14-1z',gps:'M17 34C0 14 6 2 17 2s17 12 0 32zm0-16c7 0 7-11 0-11s-7 11 0 11z',mountain:'M2 31 12 9l8 14 5-10 10 18H2zm8-18 3 4 3-4m11-10v4m-5-2h10',ai:'M15 3c-9-3-13 7-9 12-6 4-5 12 2 13 0 6 8 8 12 4m-5-29v29m5-26c10-6 17 4 13 10 8 4 5 13-2 14m-8-20 5 3-2 7-7 1M7 17h8',artist:'M7 18c0-17 23-17 23 0M5 18h5v9H5zm22 0h5v9h-5M11 13h14v11c0 9-14 9-14 0V13zm-4 24c0-9 24-9 24 0H7',calendar:'M3 7h29v29H3V7zm0 7h29M9 2v8m17-8v8M9 20h6v7H9zm11 0h6v7h-6',devices:'M2 3h27v23H2V3zm16 18h20v17H18V21M6 31h7',video:'M1 7h33v25H1V7zm10 8 12 5-12 5V15zm28 0h6v22H15v-3'};
+function icon(name){return '<svg viewBox="0 0 46 42" aria-hidden="true"><path d="'+iconPaths[name]+'"/></svg>'}
+function sectors(id,data){document.querySelector(id).innerHTML=data.map(([name,label])=>'<div class="sector">'+icon(name)+'<span>'+label+'</span></div>').join('')}
+
+sectors('#business-icons',[['restaurant','Restaurantes'],['hotel','Hoteles'],['coffee','Cafeterías'],['bar','Bares'],['retail','Retail'],['cart','Supermercados']]);
+sectors('#drive-icons',[['music','Música'],['news','Noticias'],['weather','Tiempo'],['gps','GPS'],['mountain','Lugares de interés']]);
+
+document.querySelector('#features').innerHTML=[
+  ['ai','Música creada<br>con IA'],['artist','Artistas<br>virtuales'],
+  ['calendar','Programación<br>personalizada'],['devices','Sincronización<br>multiplataforma'],['video','Contenido<br>multimedia']
+].map(([k,v])=>'<div class="feature">'+icon(k)+'<span>'+v+'</span></div>').join('');
+
+document.querySelector('#channels').innerHTML=channels.map(([name,desc,stream],i)=>
+  '<button class="channel" data-channel="'+i+'" data-stream="'+(stream||'')+'">'
+  +'<img src="channel-'+i+'.webp" alt="" loading="lazy">'
+  +'<span class="channel-play" aria-hidden="true">▶</span>'
+  +'<strong>'+name+'</strong><small>'+desc+'</small>'
+  +(i===9?'<span class="season-badge">Especial de temporada</span>':'')
+  +'</button>'
+).join('');
+
+/* ════════════════════════════════════════
+   MODAL GENÉRICO
+════════════════════════════════════════ */
+const modal=document.querySelector('#modal'), content=document.querySelector('#modal-content');
+const messages={
+  drive:['SonoPlayer Drive','La experiencia gratuita con publicidad y noticias está en preparación. El tiempo en línea, GPS y los relatos turísticos por voz se incorporarán en una etapa futura.'],
+  contact:null,
+  blog:['Blog SonoPlayer','Próximamente: novedades sobre música, ambientación de negocios y viajes.'],
+  terms:['Términos y condiciones','Los términos comerciales y de privacidad se publicarán antes de activar el servicio. En la prueba de archivos locales, tus MP3 y MP4 se reproducen desde tu dispositivo y no se suben a un servidor. Usa contenido que estés autorizado a reproducir.'],
+  genres:['Nuestros géneros','Ambiental Suave: instrumental lenta. Ambiental Media: instrumental de ritmo medio. Música M Pop: pop latino. Rock: electrónica y rock desde los 70. Oldies: inspiración de los 60 a los 90. All Music: selección variada en formato radio. Sono Kids: canciones infantiles e instrumentales para espacios familiares. Navidad: música navideña instrumental y vocal, jazz, bossa y pop con campanillas.']
+};
+
+function show(key){
+  if(key==='contact'){
+    content.innerHTML='<h2>Contacto SonoPlayer</h2><p>Conversemos sobre la música para tu negocio.</p><p><strong>Correo</strong><br><a class="text-link" href="mailto:contacto@sonoplayer.cl">contacto@sonoplayer.cl</a></p><p><strong>WhatsApp</strong><br><a class="text-link" href="https://wa.me/56951679720">+56 9 5167 9720</a></p>';
+    modal.showModal();return;
+  }
+  if(!messages[key])return;
+  const [title,text]=messages[key];
+  content.replaceChildren();
+  const h=document.createElement('h2'),p=document.createElement('p');
+  h.textContent=title;p.textContent=text;
+  content.append(h,p);modal.showModal();
+}
+
+document.querySelectorAll('[data-dialog]').forEach(b=>b.onclick=()=>show(b.dataset.dialog));
+document.querySelector('.close').onclick=()=>modal.close();
+modal.addEventListener('click',e=>{const r=modal.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)modal.close()});
+modal.addEventListener('close',()=>content.querySelectorAll('audio,video').forEach(m=>m.pause()));
+
+/* ── Detalles ── */
+const detail={
+  business:['SonoPlayer Business','Música para restaurantes, hoteles, cafeterías, bares, supermercados y retail. Elige canales por ambiente, incorpora tus MP3 con Mi Playlist y reproduce videos MP4 con Multimedia.'],
+  precios:['Precios del servicio','Business es un servicio por suscripción mensual. Prueba gratis 15 días. Planes Básico, Business y Premium. Drive será gratuito para conductores, con publicidad y noticias.'],
+  nosotros:['Nosotros','SonoPlayer es una plataforma musical con un catálogo creado con asistencia de inteligencia artificial y selección humana. Sus vocalistas y grupos son proyectos digitales originales, con identidades y nombres propios. Música Inteligente para tu negocio, tu viaje y tu mundo.']
+};
+document.querySelectorAll('[data-detail]').forEach(b=>b.onclick=()=>{
+  const [title,text]=detail[b.dataset.detail];
+  document.querySelector('#detail-content').innerHTML='<h2>'+title+'</h2><p>'+text+'</p>';
+  const area=document.querySelector('#details');area.hidden=false;
+  area.scrollIntoView({behavior:'smooth'});closeMenu();
+});
+document.querySelector('.close-detail').onclick=()=>document.querySelector('#details').hidden=true;
+document.querySelector('[data-scroll]').onclick=()=>document.querySelector('#musica').scrollIntoView({behavior:'smooth'});
+
+/* ── Precios nav ── */
+function scrollPrecios(){document.querySelector('#precios').scrollIntoView({behavior:'smooth'});closeMenu();}
+document.querySelector('#nav-precios').onclick=scrollPrecios;
+document.querySelector('#footer-precios').onclick=scrollPrecios;
+
+/* ── Canales ── */
+let currentAudio=null;
+let urls=[];
+function localPlayer(video){
+  urls.forEach(URL.revokeObjectURL);urls=[];
+  content.innerHTML='<h2>'+(video?'Multimedia':'Mi Playlist')+'</h2><p>Selecciona tus archivos '+(video?'MP4':'MP3')+'. Se reproducen desde tu dispositivo.</p><input id="files" type="file" '+(video?'':'multiple')+' accept="'+(video?'video/mp4,.mp4':'audio/mpeg,.mp3')+'" aria-label="Seleccionar archivos"><div class="file-list" id="tracks"></div><'+(video?'video':'audio')+' id="media" controls></'+( video?'video':'audio')+'>';
+  modal.showModal();
+  document.querySelector('#files').onchange=e=>{
+    urls.forEach(URL.revokeObjectURL);
+    const files=[...e.target.files];urls=files.map(f=>URL.createObjectURL(f));
+    const media=document.querySelector('#media'),tracks=document.querySelector('#tracks');
+    tracks.replaceChildren();
+    files.forEach((f,i)=>{const b=document.createElement('button');b.className='btn';b.textContent=f.name;b.onclick=()=>{media.src=urls[i];media.play().catch(()=>{})};tracks.append(b)});
+    if(urls[0])media.src=urls[0];
+  };
+}
+
+document.querySelectorAll('[data-channel]').forEach(b=>b.onclick=()=>{
+  const i=Number(b.dataset.channel);
+  if(i===6){localPlayer(false);return;}
+  if(i===7){localPlayer(true);return;}
+  const stream=b.dataset.stream;
+  if(!stream){
+    content.innerHTML='<h2>'+channels[i][0].replace('<br>',' ')+'</h2><p>Canal próximamente disponible.</p>';
+    modal.showModal();return;
+  }
+  const url='https://'+stream+'.stumusicpro.cl/'+stream;
+  content.innerHTML='<h2>'+channels[i][0].replace('<br>',' ')+'</h2><p style="color:#8fa0b0;font-size:13px">'+channels[i][1].replace('<br>',' ')+'</p><audio id="demo-audio" controls autoplay src="'+url+'"></audio><p class="notice">Demo en vivo · 30 segundos</p>';
+  if(currentAudio){currentAudio.pause();}
+  modal.showModal();
+  setTimeout(()=>{
+    const a=document.querySelector('#demo-audio');
+    if(a){a.pause();currentAudio=null;}
+    modal.close();
+  },30000);
+  setTimeout(()=>{currentAudio=document.querySelector('#demo-audio');},200);
+});
+
+/* ════════════════════════════════════════
+   MODAL DE ACCESO (Login / Registro 3 pasos)
+════════════════════════════════════════ */
+const modalAccessOverlay=document.querySelector('#modal-access-overlay');
+const modalAccess={
+  showModal:()=>modalAccessOverlay.classList.add('open'),
+  close:()=>modalAccessOverlay.classList.remove('open')
+};
+const accessBody=document.querySelector('#access-body');
+document.querySelector('#close-access').onclick=()=>modalAccess.close();
+modalAccessOverlay.addEventListener('click',e=>{if(e.target===modalAccessOverlay)modalAccess.close();});
+
+let selectedPlan='business';
+let regData={};
+
+document.querySelector('#btn-acceso').onclick=()=>{switchTab('login');modalAccess.showModal();};
+
+function abrirRegistro(plan){
+  selectedPlan=plan||'business';
+  switchTab('register');
+  modalAccess.showModal();
+}
+
+function switchTab(tab){
+  document.querySelector('#tab-login').classList.toggle('active',tab==='login');
+  document.querySelector('#tab-register').classList.toggle('active',tab==='register');
+  if(tab==='login')renderLogin();
+  else renderStep1();
+}
+
+/* ── LOGIN ── */
+function renderLogin(){
+  accessBody.innerHTML=`
+    <div class="form-field"><label>Email o usuario</label><input type="email" id="l-user" autocomplete="username" placeholder="tu@correo.cl"></div>
+    <div class="form-field"><label>Contraseña</label>
+      <div class="pw-wrap"><input type="password" id="l-pass" autocomplete="current-password" placeholder="••••••••">
+      <button class="pw-toggle" type="button" onclick="togglePw('l-pass',this)" title="Mostrar contraseña">👁</button></div>
+    </div>
+    <div class="form-error" id="l-err"></div>
+    <button class="btn-full" onclick="doLogin()">Ingresar</button>
+    <p style="text-align:center;margin-top:16px;font-size:13px;color:#8fa0b0">¿No tienes cuenta? <button class="text-link" onclick="switchTab('register')">Suscribirte</button></p>
+  `;
+}
+
+function togglePw(inputId,btn){
+  const inp=document.getElementById(inputId);
+  if(inp.type==='password'){inp.type='text';btn.textContent='🙈';}
+  else{inp.type='password';btn.textContent='👁';}
+}
+
+async function doLogin(){
+  const user=document.getElementById('l-user').value.trim();
+  const pass=document.getElementById('l-pass').value;
+  const err=document.getElementById('l-err');
+  err.style.display='none';
+  if(!user||!pass){err.textContent='Ingresa tu email y contraseña.';err.style.display='block';return;}
+  try{
+    const r=await fetch(BASE+'/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:user,password:pass})});
+    const d=await r.json();
+    if(!r.ok){err.textContent=d.detail||'Usuario o contraseña incorrectos.';err.style.display='block';return;}
+    localStorage.setItem('sp_token',d.access_token);
+    localStorage.setItem('sp_user',user);
+    modalAccess.close();
+    showPortal(user);
+  }catch(e){err.textContent='Error de conexión. Intenta más tarde.';err.style.display='block';}
+}
+
+/* ── REGISTRO PASO 1: plan ── */
+function renderStep1(preselect){
+  const sel=preselect||selectedPlan;
+  accessBody.innerHTML=`
+    <div class="step-indicator">
+      <div class="step-dot active" id="sd1"></div>
+      <div class="step-dot" id="sd2"></div>
+      <div class="step-dot" id="sd3"></div>
+    </div>
+    <h3 style="margin:0 0 6px;font-size:18px">Elige tu plan</h3>
+    <p style="font-size:13px;color:#8fa0b0;margin-bottom:14px">15 días gratis · Sin tarjeta de crédito</p>
+    <div class="plans-grid">
+      <div class="plan-card ${sel==='basico'?'selected':''}" onclick="selectPlan('basico',this)">
+        <h3>Básico</h3>
+        <div class="price">$9.990 <span>/mes</span></div>
+        <ul><li>3 canales</li><li>Mi Playlist</li><li>1 dispositivo</li></ul>
+      </div>
+      <div class="plan-card ${sel==='business'?'selected':''}" onclick="selectPlan('business',this)">
+        <h3>Business</h3>
+        <div class="price">$19.990 <span>/mes</span></div>
+        <ul><li>10 canales</li><li>Multimedia</li><li>3 dispositivos</li></ul>
+      </div>
+      <div class="plan-card ${sel==='premium'?'selected':''}" onclick="selectPlan('premium',this)">
+        <h3>Premium</h3>
+        <div class="price">$34.990 <span>/mes</span></div>
+        <ul><li>10 canales + Radio</li><li>Ilimitado</li><li>Soporte 24/7</li></ul>
+      </div>
+      <div class="plan-card plan-free ${sel==='prueba'?'selected':''}" onclick="selectPlan('prueba',this)">
+        <h3>Prueba gratis</h3>
+        <div class="price" style="color:#4dffa0">$0 <span>15 días</span></div>
+        <ul><li>Acceso completo</li><li>Sin tarjeta</li></ul>
+      </div>
+    </div>
+    <button class="btn-full" onclick="if(selectedPlan)showRegisterStep2()">Continuar →</button>
+  `;
+}
+
+function selectPlan(plan,el){
+  selectedPlan=plan;
+  document.querySelectorAll('.plan-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+/* ── REGISTRO PASO 2: datos personales ── */
+function showRegisterStep2(){
+  document.getElementById('sd1').classList.add('done');document.getElementById('sd1').classList.remove('active');
+  document.getElementById('sd2').classList.add('active');
+
+  const regiones=['Arica y Parinacota','Tarapacá','Antofagasta','Atacama','Coquimbo','Valparaíso','Metropolitana','O\'Higgins','Maule','Ñuble','Biobío','La Araucanía','Los Ríos','Los Lagos','Aysén','Magallanes'];
+
+  accessBody.innerHTML=`
+    <div class="step-indicator">
+      <div class="step-dot done" id="sd1"></div>
+      <div class="step-dot active" id="sd2"></div>
+      <div class="step-dot" id="sd3"></div>
+    </div>
+    <h3 style="margin:0 0 16px;font-size:18px">Tus datos</h3>
+    <div class="two-col">
+      <div class="form-field"><label>Nombre</label><input type="text" id="r-nombre" placeholder="Juan"></div>
+      <div class="form-field"><label>Apellido</label><input type="text" id="r-apellido" placeholder="Pérez"></div>
+    </div>
+    <div class="form-field"><label>Teléfono</label><input type="tel" id="r-tel" placeholder="+56 9 1234 5678"></div>
+    <div class="form-field"><label>País</label>
+      <select id="r-pais" onchange="toggleRegiones(this.value)">
+        <option value="">Selecciona tu país</option>
+        <option value="CL" selected>🇨🇱 Chile</option>
+        <option value="AR">🇦🇷 Argentina</option>
+        <option value="PE">🇵🇪 Perú</option>
+        <option value="CO">🇨🇴 Colombia</option>
+        <option value="MX">🇲🇽 México</option>
+        <option value="otro">Otro</option>
+      </select>
+    </div>
+    <div class="regiones-fields visible" id="regiones-block">
+      <div class="form-field"><label>Región</label>
+        <select id="r-region"><option value="">Selecciona región</option>${regiones.map(r=>'<option value="'+r+'">'+r+'</option>').join('')}</select>
+      </div>
+      <div class="form-field"><label>Comuna</label><input type="text" id="r-comuna" placeholder="Tu comuna"></div>
+    </div>
+    <div class="form-field"><label>Dirección</label><input type="text" id="r-direccion" placeholder="Calle, número"></div>
+    <div class="form-field"><label>Nombre del negocio (opcional)</label><input type="text" id="r-negocio" placeholder="Mi Restaurante"></div>
+    <div class="form-error" id="r2-err"></div>
+    <button class="btn-full" onclick="goStep3()">Continuar →</button>
+    <button class="btn-full outline" onclick="renderStep1()" style="margin-top:8px">← Volver</button>
+  `;
+}
+
+function toggleRegiones(pais){
+  document.getElementById('regiones-block').classList.toggle('visible',pais==='CL');
+}
+
+function goStep3(){
+  const nombre=document.getElementById('r-nombre').value.trim();
+  const apellido=document.getElementById('r-apellido').value.trim();
+  const tel=document.getElementById('r-tel').value.trim();
+  const pais=document.getElementById('r-pais').value;
+  const err=document.getElementById('r2-err');
+  err.style.display='none';
+  if(!nombre||!apellido){err.textContent='Ingresa tu nombre y apellido.';err.style.display='block';return;}
+  if(!pais){err.textContent='Selecciona tu país.';err.style.display='block';return;}
+  regData={nombre,apellido,tel,pais,
+    region:(document.getElementById('r-region')||{}).value||'',
+    comuna:(document.getElementById('r-comuna')||{}).value||'',
+    direccion:document.getElementById('r-direccion').value.trim(),
+    negocio:document.getElementById('r-negocio').value.trim()
+  };
+  showRegisterStep3();
+}
+
+/* ── REGISTRO PASO 3: email + código + contraseña ── */
+function showRegisterStep3(){
+  accessBody.innerHTML=`
+    <div class="step-indicator">
+      <div class="step-dot done" id="sd1"></div>
+      <div class="step-dot done" id="sd2"></div>
+      <div class="step-dot active" id="sd3"></div>
+    </div>
+    <h3 style="margin:0 0 16px;font-size:18px">Verifica tu email</h3>
+    <div class="form-field">
+      <label>Email</label>
+      <input type="email" id="r-email" placeholder="tu@correo.cl" autocomplete="email">
+    </div>
+    <div class="form-field">
+      <label>Repetir email</label>
+      <input type="email" id="r-email2" placeholder="tu@correo.cl">
+    </div>
+    <div class="form-field">
+      <label>Crear contraseña</label>
+      <div class="pw-wrap"><input type="password" id="r-pass" autocomplete="new-password" placeholder="Mínimo 6 caracteres">
+      <button class="pw-toggle" type="button" onclick="togglePw('r-pass',this)" title="Mostrar contraseña">👁</button></div>
+    </div>
+    <div class="form-error" id="r3-err"></div>
+    <button class="btn-full" id="btn-sendcode" onclick="sendVerifyCode()">Enviar código de verificación</button>
+    <div id="code-section" style="display:none">
+      <p class="verify-hint" style="margin-top:16px">Ingresa el código de 6 dígitos enviado a tu email:</p>
+      <div class="code-inputs">
+        <input type="text" maxlength="1" class="code-digit" id="c0" oninput="nextDigit(0)">
+        <input type="text" maxlength="1" class="code-digit" id="c1" oninput="nextDigit(1)">
+        <input type="text" maxlength="1" class="code-digit" id="c2" oninput="nextDigit(2)">
+        <input type="text" maxlength="1" class="code-digit" id="c3" oninput="nextDigit(3)">
+        <input type="text" maxlength="1" class="code-digit" id="c4" oninput="nextDigit(4)">
+        <input type="text" maxlength="1" class="code-digit" id="c5" oninput="nextDigit(5)">
+      </div>
+      <button class="btn-full" onclick="verifyCode()">Confirmar y crear cuenta</button>
+      <button class="resend-link" onclick="sendVerifyCode()">Reenviar código</button>
+    </div>
+    <button class="btn-full outline" onclick="showRegisterStep2()" style="margin-top:8px">← Volver</button>
+  `;
+}
+
+function nextDigit(i){
+  const val=document.getElementById('c'+i).value.replace(/\D/,'');
+  document.getElementById('c'+i).value=val;
+  if(val&&i<5)document.getElementById('c'+(i+1)).focus();
+}
+
+async function sendVerifyCode(){
+  const email=document.getElementById('r-email').value.trim();
+  const email2=document.getElementById('r-email2').value.trim();
+  const pass=document.getElementById('r-pass').value;
+  const err=document.getElementById('r3-err');
+  err.style.display='none';
+  if(!email||!email.includes('@')){err.textContent='Ingresa un email válido.';err.style.display='block';return;}
+  if(email!==email2){err.textContent='Los emails no coinciden.';err.style.display='block';return;}
+  if(pass.length<6){err.textContent='La contraseña debe tener al menos 6 caracteres.';err.style.display='block';return;}
+  const btn=document.getElementById('btn-sendcode');
+  btn.textContent='Enviando…';btn.disabled=true;
+  try{
+    const r=await fetch(BASE+'/register/send-code',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass,...regData,plan:selectedPlan})});
+    const d=await r.json();
+    if(!r.ok){err.textContent=d.detail||'Error al enviar código.';err.style.display='block';btn.textContent='Enviar código de verificación';btn.disabled=false;return;}
+    document.getElementById('code-section').style.display='block';
+    btn.textContent='Código enviado ✓';
+    document.getElementById('c0').focus();
+  }catch(e){err.textContent='Error de conexión.';err.style.display='block';btn.textContent='Enviar código de verificación';btn.disabled=false;}
+}
+
+async function verifyCode(){
+  const email=document.getElementById('r-email').value.trim();
+  const code=[0,1,2,3,4,5].map(i=>document.getElementById('c'+i).value).join('');
+  const err=document.getElementById('r3-err');
+  err.style.display='none';
+  if(code.length<6){err.textContent='Ingresa el código completo (6 dígitos).';err.style.display='block';return;}
+  try{
+    const r=await fetch(BASE+'/register/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,code})});
+    const d=await r.json();
+    if(!r.ok){err.textContent=d.detail||'Código incorrecto.';err.style.display='block';return;}
+    // Guardar token si viene
+    if(d.access_token)localStorage.setItem('sp_token',d.access_token);
+    localStorage.setItem('sp_user',email);
+    accessBody.innerHTML=`
+      <div class="success-box">
+        <div class="checkmark">✅</div>
+        <h3>¡Cuenta creada!</h3>
+        <p>Bienvenido a SonoPlayer.<br>En breve recibirás un email con tu acceso.<br>Plan: <strong>${selectedPlan}</strong></p>
+        <button class="btn-full" style="margin-top:20px" onclick="modalAccess.close();showPortal(localStorage.getItem('sp_user'))">Ir a Mi Portal →</button>
+      </div>
+    `;
+  }catch(e){err.textContent='Error de conexión.';err.style.display='block';}
+}
+
+/* ════════════════════════════════════════
+   PORTAL DEL CLIENTE (post-login)
+════════════════════════════════════════ */
+function showPortal(user){
+  window.location.href='portal.html?user='+encodeURIComponent(user);
+}
+
+/* ════════════════════════════════════════
+   MENÚ MÓVIL
+════════════════════════════════════════ */
+const menu=document.querySelector('.menu-btn');
+function closeMenu(){document.querySelector('#nav').classList.remove('open');menu.setAttribute('aria-expanded','false');}
+menu.onclick=()=>{menu.setAttribute('aria-expanded',document.querySelector('#nav').classList.toggle('open'));};
+document.querySelectorAll('nav a,nav [data-dialog],nav [data-detail]').forEach(a=>a.addEventListener('click',closeMenu));
+document.getElementById('nav-precios').addEventListener('click',closeMenu);
+
+/* ── Botones Suscribirme ── */
+document.querySelectorAll('.btn-suscribir').forEach(b=>b.addEventListener('click',function(e){
+  e.stopPropagation();
+  abrirRegistro(this.dataset.plan);
+}));
+</script>
+</body>
+</html>
