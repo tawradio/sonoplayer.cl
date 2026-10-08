@@ -346,19 +346,19 @@ input[type=file]{width:100%;margin:12px 0;font-size:14px}
 /* ════════════════════════════════════════
    DATOS ESTÁTICOS
 ════════════════════════════════════════ */
-const BASE = 'https://sonoplayer.stumusicpro.cl';
+const BASE = 'http://161.97.133.213:8000';
 
 const channels=[
   ['Ambiental<br>Suave','Instrumental lenta','manana'],
   ['Ambiental<br>Media','Instrumental<br>ritmo medio','almuerzo'],
   ['Música<br>M Pop','Pop latino','pop'],
   ['Rock','Electrónica y rock<br>desde los 70','rock'],
-  ['Oldies','60 · 70 · 80 · 90','oldies'],
-  ['All Music','De todo tipo<br>Radio','allmusic'],
+  ['Soft<br>Music','Música suave<br>instrumental','softmusic'],
+  ['Jazz','Jazz y blues<br>selección','jazz'],
   ['Mi Playlist','Tu propia música<br>(MP3)',null],
   ['Multimedia','Música + Video<br>MP4',null],
-  ['Sono Kids','Música para pequeños<br>grandes momentos','sonokids'],
-  ['Navidad','El sonido de una<br>época especial','navidad']
+  ['Tarde<br>Noche','Música nocturna<br>y relajante','tardenoche'],
+  ['Temática','Selección<br>temática especial','tematica']
 ];
 
 const iconPaths={restaurant:'M7 2v12m-3-12v8c0 3 6 3 6 0V2M7 14v18M19 2c-6 7-6 14 0 14V2m0 14v16',hotel:'M2 29V10m0 13h30v6M7 12h7v8H7zM17 14h10c3 0 5 2 5 6v3H2',coffee:'M4 11h21v7c0 14-21 14-21 0v-7zm21 2h5c7 7-1 10-5 9M2 31h27M9 2v8m7-5v5m6-5v5',bar:'M3 3h28L17 17 3 3zm14 14v13m-7 2h14',retail:'M5 10h25l-2 21H7L5 10zm7 0V6c0-7 10-7 10 0v4',cart:'M2 2h5l5 22h16l5-15H9m4 21h1m12 0h1M16 12v7m6-7v7',music:'M11 24V5l20-3v21M11 7l20-3M11 24c0 7-11 7-11 1 0-5 8-6 11-1zm20-1c0 7-11 7-11 1 0-5 8-6 11-1z',news:'M4 3h26v29H4V3zm5 5h8v10H9V8zm12 0h5m-5 5h5M9 23h17M9 28h17',weather:'M8 18c-1-10 18-13 21-2M15 2v4M1 10l4 3m23-6 3-3M11 21c-12 0-9 13-2 13h15c12 0 10-13 1-12-3-7-12-7-14-1z',gps:'M17 34C0 14 6 2 17 2s17 12 0 32zm0-16c7 0 7-11 0-11s-7 11 0 11z',mountain:'M2 31 12 9l8 14 5-10 10 18H2zm8-18 3 4 3-4m11-10v4m-5-2h10',ai:'M15 3c-9-3-13 7-9 12-6 4-5 12 2 13 0 6 8 8 12 4m-5-29v29m5-26c10-6 17 4 13 10 8 4 5 13-2 14m-8-20 5 3-2 7-7 1M7 17h8',artist:'M7 18c0-17 23-17 23 0M5 18h5v9H5zm22 0h5v9h-5M11 13h14v11c0 9-14 9-14 0V13zm-4 24c0-9 24-9 24 0H7',calendar:'M3 7h29v29H3V7zm0 7h29M9 2v8m17-8v8M9 20h6v7H9zm11 0h6v7h-6',devices:'M2 3h27v23H2V3zm16 18h20v17H18V21M6 31h7',video:'M1 7h33v25H1V7zm10 8 12 5-12 5V15zm28 0h6v22H15v-3'};
@@ -459,7 +459,7 @@ document.querySelectorAll('[data-channel]').forEach(b=>b.onclick=()=>{
     content.innerHTML='<h2>'+channels[i][0].replace('<br>',' ')+'</h2><p>Canal próximamente disponible.</p>';
     modalShow();return;
   }
-  const url='https://'+stream+'.stumusicpro.cl/'+stream;
+  const url=BASE+'/'+stream;
   content.innerHTML='<h2>'+channels[i][0].replace('<br>',' ')+'</h2><p style="color:#8fa0b0;font-size:13px">'+channels[i][1].replace('<br>',' ')+'</p><audio id="demo-audio" controls autoplay src="'+url+'"></audio><p class="notice">Demo en vivo · 30 segundos</p>';
   if(currentAudio){currentAudio.pause();}
   modalShow();
