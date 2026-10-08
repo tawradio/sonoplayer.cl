@@ -119,15 +119,15 @@ input[type=file]{width:100%;margin:12px 0;font-size:14px}
 .step-dot.active{background:var(--cyan)}
 .step-dot.done{background:#1a7a60}
 .plans-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
-.plan-card{border:2px solid #1a3a4a;border-radius:12px;padding:14px;cursor:pointer;transition:all .2s;text-align:center}
-.plan-card:hover,.plan-card.selected{border-color:var(--cyan);background:#071c28}
-.plan-card h3{font-size:16px;margin:0 0 4px}
-.plan-card .price{font-size:22px;font-weight:700;color:var(--cyan)}
-.plan-card .price span{font-size:12px;font-weight:400;color:#8fa0b0}
-.plan-card ul{text-align:left;font-size:12px;color:#8fa0b0;margin:8px 0 0;padding:0 0 0 14px}
-.plan-card ul li{margin-bottom:3px}
-.plan-free{border-color:#2a5a3a}
-.plan-free .price{color:#4dffa0}
+.reg-plan-card{border:2px solid #1a3a4a;border-radius:12px;padding:14px;cursor:pointer;transition:all .2s;text-align:center}
+.reg-plan-card:hover,.reg-plan-card.selected{border-color:var(--cyan);background:#071c28}
+.reg-plan-card h3{font-size:16px;margin:0 0 4px}
+.reg-plan-card .price{font-size:22px;font-weight:700;color:var(--cyan)}
+.reg-plan-card .price span{font-size:12px;font-weight:400;color:#8fa0b0}
+.reg-plan-card ul{text-align:left;font-size:12px;color:#8fa0b0;margin:8px 0 0;padding:0 0 0 14px}
+.reg-plan-card ul li{margin-bottom:3px}
+.reg-plan-free{border-color:#2a5a3a}
+.reg-plan-free .price{color:#4dffa0}
 .regiones-fields{display:none}
 .regiones-fields.visible{display:block}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -546,22 +546,22 @@ function renderStep1(preselect){
     <h3 style="margin:0 0 6px;font-size:18px">Elige tu plan</h3>
     <p style="font-size:13px;color:#8fa0b0;margin-bottom:14px">15 días gratis · Sin tarjeta de crédito</p>
     <div class="plans-grid">
-      <div class="plan-card ${sel==='basico'?'selected':''}" onclick="selectPlan('basico',this)">
+      <div class="reg-plan-card ${sel==='basico'?'selected':''}" onclick="selectPlan('basico',this)">
         <h3>Básico</h3>
         <div class="price">$9.990 <span>/mes</span></div>
         <ul><li>3 canales</li><li>Mi Playlist</li><li>1 dispositivo</li></ul>
       </div>
-      <div class="plan-card ${sel==='business'?'selected':''}" onclick="selectPlan('business',this)">
+      <div class="reg-plan-card ${sel==='business'?'selected':''}" onclick="selectPlan('business',this)">
         <h3>Business</h3>
         <div class="price">$19.990 <span>/mes</span></div>
         <ul><li>10 canales</li><li>Multimedia</li><li>3 dispositivos</li></ul>
       </div>
-      <div class="plan-card ${sel==='premium'?'selected':''}" onclick="selectPlan('premium',this)">
+      <div class="reg-plan-card ${sel==='premium'?'selected':''}" onclick="selectPlan('premium',this)">
         <h3>Premium</h3>
         <div class="price">$34.990 <span>/mes</span></div>
         <ul><li>10 canales + Radio</li><li>Ilimitado</li><li>Soporte 24/7</li></ul>
       </div>
-      <div class="plan-card plan-free ${sel==='prueba'?'selected':''}" onclick="selectPlan('prueba',this)">
+      <div class="reg-plan-card reg-plan-free ${sel==='prueba'?'selected':''}" onclick="selectPlan('prueba',this)">
         <h3>Prueba gratis</h3>
         <div class="price" style="color:#4dffa0">$0 <span>15 días</span></div>
         <ul><li>Acceso completo</li><li>Sin tarjeta</li></ul>
@@ -573,7 +573,7 @@ function renderStep1(preselect){
 
 function selectPlan(plan,el){
   selectedPlan=plan;
-  document.querySelectorAll('.plan-card').forEach(c=>c.classList.remove('selected'));
+  document.querySelectorAll('.reg-plan-card').forEach(c=>c.classList.remove('selected'));
   el.classList.add('selected');
 }
 
