@@ -146,7 +146,7 @@ input[type=file]{width:100%;margin:12px 0;font-size:14px}
 .precios-section h2{text-align:center;font-size:28px;margin-bottom:8px}
 .precios-section .subtitle{text-align:center;color:#8fa0b0;font-size:15px;margin-bottom:40px}
 .precios-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.precio-card{border:1px solid #174456;border-radius:16px;padding:28px 24px;background:#030a14;position:relative;text-align:center}
+.precio-card{border:1px solid #174456;border-radius:16px;padding:28px 24px;background:#030a14;position:relative;text-align:center;overflow:visible}
 .precio-card.destacado{border-color:var(--cyan);background:#04111c}
 .precio-card .badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--cyan);color:#00131c;font-size:11px;font-weight:700;padding:4px 14px;border-radius:20px;white-space:nowrap}
 .precio-card h3{font-size:20px;margin:0 0 6px}
@@ -156,7 +156,7 @@ input[type=file]{width:100%;margin:12px 0;font-size:14px}
 .precio-card ul{text-align:left;font-size:13px;color:#8fa0b0;margin:0 0 20px;padding:0;list-style:none}
 .precio-card ul li{padding:5px 0;border-bottom:1px solid #0d2030}
 .precio-card ul li::before{content:'✓  ';color:var(--cyan)}
-.precio-card .btn-suscribir{width:100%;padding:12px;border-radius:10px;font-size:14px;font-weight:700;border:1px solid var(--cyan);background:transparent;color:var(--cyan);cursor:pointer;transition:all .2s}
+.precio-card .btn-suscribir{width:100%;padding:12px;border-radius:10px;font-size:14px;font-weight:700;border:1px solid var(--cyan);background:transparent;color:var(--cyan);cursor:pointer;transition:all .2s;position:relative;z-index:10;pointer-events:all}
 .precio-card.destacado .btn-suscribir{background:var(--cyan);color:#00131c;border-color:transparent}
 .precio-card .btn-suscribir:hover{opacity:.8}
 
@@ -268,7 +268,7 @@ input[type=file]{width:100%;margin:12px 0;font-size:14px}
         <li>1 dispositivo</li>
         <li>Soporte por email</li>
       </ul>
-      <button class="btn-suscribir" data-plan="basico">Suscribirme</button>
+      <button class="btn-suscribir" data-plan="basico" onclick="abrirRegistro(this.dataset.plan)">Suscribirme</button>
     </div>
     <div class="precio-card destacado">
       <div class="badge">MÁS POPULAR</div>
@@ -282,7 +282,7 @@ input[type=file]{width:100%;margin:12px 0;font-size:14px}
         <li>Sono Kids + Navidad</li>
         <li>Soporte prioritario</li>
       </ul>
-      <button class="btn-suscribir" data-plan="business">Suscribirme</button>
+      <button class="btn-suscribir" data-plan="business" onclick="abrirRegistro(this.dataset.plan)">Suscribirme</button>
     </div>
     <div class="precio-card">
       <h3>Premium</h3>
@@ -296,7 +296,7 @@ input[type=file]{width:100%;margin:12px 0;font-size:14px}
         <li>Estadísticas de uso</li>
         <li>Soporte 24/7</li>
       </ul>
-      <button class="btn-suscribir" data-plan="premium">Suscribirme</button>
+      <button class="btn-suscribir" data-plan="premium" onclick="abrirRegistro(this.dataset.plan)">Suscribirme</button>
     </div>
   </div>
 </section>
