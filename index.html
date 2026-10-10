@@ -178,9 +178,9 @@ async function doVerificar(){
   try{
     const fd=new FormData();fd.append('email',email);fd.append('email2',email2);fd.append('nombre',nombre);fd.append('apellido',apellido);fd.append('telefono',telefono);fd.append('pais',pais);fd.append('region',region);fd.append('comuna',comuna);fd.append('direccion',direccion);fd.append('plan',selectedPlan);
     const r=await fetch('https://api.sonoplayer.cl/register/send-code',{method:'POST',body:fd});
-    if(!r.ok){const d=await r.json();alert(d.detail||'Error.');btn.textContent='Enviar código de verificación';btn.disabled=false;return;}
+    if(!r.ok){const d=await r.json();const msg=Array.isArray(d.detail)?d.detail.map(e=>e.msg||JSON.stringify(e)).join('\n'):(typeof d.detail==='string'?d.detail:JSON.stringify(d));alert(msg);btn.textContent='Enviar código de verificación';btn.disabled=false;return;}
     renderStep3(nombre,apellido,email,telefono,pais,region,comuna,direccion);
-  }catch{alert('Error de conexión.');btn.textContent='Enviar código de verificación';btn.disabled=false;}
+  }catch(err){alert('Error: '+err.message);btn.textContent='Enviar código de verificación';btn.disabled=false;}
 }
 function renderStep3(nombre,apellido,email,telefono,pais,region,comuna,direccion){
   accessBody.innerHTML=`<button class="step-back" id="btn-volver2">← Volver</button>
