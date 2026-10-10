@@ -123,7 +123,8 @@ async function doLogin(){
   if(!email||!pass){alert('Completa todos los campos.');return;}
   const btn=document.getElementById('btn-login');btn.textContent='Ingresando…';btn.disabled=true;
   try{
-    const r=await fetch('https://api.sonoplayer.cl/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass})});
+    const fdl=new FormData();fdl.append('email',email);fdl.append('password',pass);
+    const r=await fetch('https://api.sonoplayer.cl/login',{method:'POST',body:fdl});
     const d=await r.json();
     if(!r.ok){alert(d.detail||'Error al ingresar.');btn.textContent='Ingresar';btn.disabled=false;return;}
     localStorage.setItem('sp_token',d.access_token);cerrarAcceso();alert('¡Bienvenido/a!');
@@ -175,7 +176,8 @@ async function doVerificar(){
   if(email!==email2){alert('Los correos no coinciden.');return;}
   const btn=document.getElementById('btn-verificar');btn.textContent='Enviando…';btn.disabled=true;
   try{
-    const r=await fetch('https://api.sonoplayer.cl/register/send-code',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,email2,nombre,apellido,telefono,pais,region,comuna,direccion,plan:selectedPlan})});
+    const fd=new FormData();fd.append('email',email);fd.append('email2',email2);fd.append('nombre',nombre);fd.append('apellido',apellido);fd.append('telefono',telefono);fd.append('pais',pais);fd.append('region',region);fd.append('comuna',comuna);fd.append('direccion',direccion);fd.append('plan',selectedPlan);
+    const r=await fetch('https://api.sonoplayer.cl/register/send-code',{method:'POST',body:fd});
     if(!r.ok){const d=await r.json();alert(d.detail||'Error.');btn.textContent='Enviar código de verificación';btn.disabled=false;return;}
     renderStep3(nombre,apellido,email,telefono,pais,region,comuna,direccion);
   }catch{alert('Error de conexión.');btn.textContent='Enviar código de verificación';btn.disabled=false;}
@@ -194,7 +196,8 @@ async function doRegistrar(email){
   if(code.length!==6){alert('Ingresa el código de 6 dígitos.');return;}
   const btn=document.getElementById('btn-registrar');btn.textContent='Registrando…';btn.disabled=true;
   try{
-    const r=await fetch('https://api.sonoplayer.cl/register/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,code})});
+    const fd2=new FormData();fd2.append('email',email);fd2.append('code',code);
+    const r=await fetch('https://api.sonoplayer.cl/register/verify',{method:'POST',body:fd2});
     const d=await r.json();
     if(!r.ok){alert(d.detail||'Error al registrar.');btn.textContent='Completar registro';btn.disabled=false;return;}
     if(d.access_token)localStorage.setItem('sp_token',d.access_token);
