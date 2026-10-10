@@ -144,41 +144,57 @@ function renderStep1(){
 function renderStep2(){
   accessBody.innerHTML=`<button class="step-back" id="btn-volver">← Volver</button>
     <h3 style="margin:0 0 14px;font-size:17px">Tus datos</h3>
-    <label>Nombre completo</label><input type="text" id="reg-nombre" placeholder="Juan Pérez" autocomplete="name">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div><label>Nombre</label><input type="text" id="reg-nombre" placeholder="Juan" autocomplete="given-name"></div>
+      <div><label>Apellido</label><input type="text" id="reg-apellido" placeholder="Pérez" autocomplete="family-name"></div>
+    </div>
     <label>Correo electrónico</label><input type="email" id="reg-email" placeholder="tu@correo.cl" autocomplete="email">
-    <label>Contraseña</label><input type="password" id="reg-pass" placeholder="Mín. 8 caracteres" autocomplete="new-password">
+    <label>Confirmar correo</label><input type="email" id="reg-email2" placeholder="tu@correo.cl">
+    <label>Teléfono</label><input type="tel" id="reg-telefono" placeholder="+56 9 1234 5678" autocomplete="tel">
+    <label>País</label><input type="text" id="reg-pais" placeholder="Chile" value="Chile" autocomplete="country-name">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div><label>Región</label><input type="text" id="reg-region" placeholder="Región Metropolitana"></div>
+      <div><label>Comuna</label><input type="text" id="reg-comuna" placeholder="Santiago"></div>
+    </div>
+    <label>Dirección</label><input type="text" id="reg-direccion" placeholder="Av. Ejemplo 123" autocomplete="street-address">
     <button class="btn-full" id="btn-verificar">Enviar código de verificación</button>`;
   document.getElementById('btn-volver').onclick=renderStep1;
   document.getElementById('btn-verificar').onclick=doVerificar;
 }
 async function doVerificar(){
   const nombre=document.getElementById('reg-nombre').value.trim();
+  const apellido=document.getElementById('reg-apellido').value.trim();
   const email=document.getElementById('reg-email').value.trim();
-  const pass=document.getElementById('reg-pass').value;
-  if(!nombre||!email||!pass){alert('Completa todos los campos.');return;}
-  if(pass.length<8){alert('La contraseña debe tener al menos 8 caracteres.');return;}
+  const email2=document.getElementById('reg-email2').value.trim();
+  const telefono=document.getElementById('reg-telefono').value.trim();
+  const pais=document.getElementById('reg-pais').value.trim();
+  const region=document.getElementById('reg-region').value.trim();
+  const comuna=document.getElementById('reg-comuna').value.trim();
+  const direccion=document.getElementById('reg-direccion').value.trim();
+  if(!nombre||!apellido||!email||!email2||!telefono||!pais||!region||!comuna||!direccion){alert('Completa todos los campos.');return;}
+  if(email!==email2){alert('Los correos no coinciden.');return;}
   const btn=document.getElementById('btn-verificar');btn.textContent='Enviando…';btn.disabled=true;
   try{
-    const r=await fetch('https://api.sonoplayer.cl/send-verification',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,nombre})});
+    const r=await fetch('https://api.sonoplayer.cl/register/send-code',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,email2,nombre,apellido,telefono,pais,region,comuna,direccion,plan:selectedPlan})});
     if(!r.ok){const d=await r.json();alert(d.detail||'Error.');btn.textContent='Enviar código de verificación';btn.disabled=false;return;}
-    renderStep3(nombre,email,pass);
+    renderStep3(nombre,apellido,email,telefono,pais,region,comuna,direccion);
   }catch{alert('Error de conexión.');btn.textContent='Enviar código de verificación';btn.disabled=false;}
 }
-function renderStep3(nombre,email,pass){
+function renderStep3(nombre,apellido,email,telefono,pais,region,comuna,direccion){
   accessBody.innerHTML=`<button class="step-back" id="btn-volver2">← Volver</button>
     <h3 style="margin:0 0 8px;font-size:17px">Verificación</h3>
     <p style="color:#8ab;font-size:13px;margin:0 0 14px">Código enviado a <strong>${'${email}'}</strong></p>
     <label>Código de 6 dígitos</label><input type="text" id="reg-codigo" placeholder="123456" maxlength="6" autocomplete="one-time-code">
     <button class="btn-full" id="btn-registrar">Completar registro</button>`;
   document.getElementById('btn-volver2').onclick=()=>renderStep2();
-  document.getElementById('btn-registrar').onclick=()=>doRegistrar(nombre,email,pass);
+  document.getElementById('btn-registrar').onclick=()=>doRegistrar(email);
 }
-async function doRegistrar(nombre,email,pass){
-  const codigo=document.getElementById('reg-codigo').value.trim();
-  if(codigo.length!==6){alert('Ingresa el código de 6 dígitos.');return;}
+async function doRegistrar(email){
+  const code=document.getElementById('reg-codigo').value.trim();
+  if(code.length!==6){alert('Ingresa el código de 6 dígitos.');return;}
   const btn=document.getElementById('btn-registrar');btn.textContent='Registrando…';btn.disabled=true;
   try{
-    const r=await fetch('https://api.sonoplayer.cl/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nombre,email,password:pass,plan:selectedPlan,codigo})});
+    const r=await fetch('https://api.sonoplayer.cl/register/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,code})});
     const d=await r.json();
     if(!r.ok){alert(d.detail||'Error al registrar.');btn.textContent='Completar registro';btn.disabled=false;return;}
     if(d.access_token)localStorage.setItem('sp_token',d.access_token);
