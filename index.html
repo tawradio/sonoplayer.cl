@@ -109,9 +109,10 @@ function switchTab(tab){
   if(tab==='login')renderLogin();else renderStep1();
 }
 function renderLogin(){
-  accessBody.innerHTML=`<label>Correo electrónico</label>
+  accessBody.innerHTML=`<p style="color:#8ab;font-size:12px;margin:0 0 10px">Ingresa tu correo y la contraseña temporal que recibiste por email.</p>
+    <label>Correo electrónico</label>
     <input type="email" id="login-email" placeholder="tu@correo.cl" autocomplete="email">
-    <label>Contraseña</label>
+    <label>Contraseña temporal</label>
     <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
     <button class="btn-full" id="btn-login">Ingresar</button>
     <p style="text-align:center;font-size:13px;color:#8ab;margin-top:14px">¿No tienes cuenta? <button class="text-link" onclick="switchTab('register')" style="color:#00c9e9">Suscríbete aquí</button></p>`;
@@ -123,12 +124,13 @@ async function doLogin(){
   if(!email||!pass){alert('Completa todos los campos.');return;}
   const btn=document.getElementById('btn-login');btn.textContent='Ingresando…';btn.disabled=true;
   try{
-    const fdl=new FormData();fdl.append('email',email);fdl.append('password',pass);
+    const username=email.split('@')[0].toLowerCase().replace(/\./g,'_');
+    const fdl=new FormData();fdl.append('username',username);fdl.append('password',pass);
     const r=await fetch('https://api.sonoplayer.cl/login',{method:'POST',body:fdl});
     const d=await r.json();
-    if(!r.ok){alert(d.detail||'Error al ingresar.');btn.textContent='Ingresar';btn.disabled=false;return;}
-    localStorage.setItem('sp_token',d.access_token);cerrarAcceso();alert('¡Bienvenido/a!');
-  }catch{alert('Error de conexión.');btn.textContent='Ingresar';btn.disabled=false;}
+    if(!r.ok){const msg=Array.isArray(d.detail)?d.detail.map(e=>e.msg||JSON.stringify(e)).join('\n'):(typeof d.detail==='string'?d.detail:JSON.stringify(d));alert(msg);btn.textContent='Ingresar';btn.disabled=false;return;}
+    const token=d.token||d.access_token;if(token)localStorage.setItem('sp_token',token);if(d.username)localStorage.setItem('sp_user',d.username);cerrarAcceso();alert('¡Bienvenido/a a SonoPlayer!');
+  }catch(err){alert('Error: '+err.message);btn.textContent='Ingresar';btn.disabled=false;}
 }
 function renderStep1(){
   const sel=selectedPlan;
@@ -201,7 +203,7 @@ async function doRegistrar(email){
     const d=await r.json();
     if(!r.ok){alert(d.detail||'Error al registrar.');btn.textContent='Completar registro';btn.disabled=false;return;}
     if(d.access_token)localStorage.setItem('sp_token',d.access_token);
-    cerrarAcceso();alert('¡Registro exitoso! Bienvenido/a a SonoPlayer.');
+    cerrarAcceso();alert('¡Registro exitoso! Te enviamos tu contraseña temporal al correo. Úsala para ingresar.');
   }catch{alert('Error de conexión.');btn.textContent='Completar registro';btn.disabled=false;}
 }
 document.addEventListener('click',function(e){
