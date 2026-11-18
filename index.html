@@ -627,7 +627,7 @@ function spLoad(idx){
   if(!spPlaylist.length)return;
   spIndex=Math.max(0,Math.min(idx,spPlaylist.length-1));
   const filename=spPlaylist[spIndex];
-  const src='demos/'+spFolder+'/'+encodeURIComponent(filename);
+  const src='http://cdn.sonoplayer.cl/demos/'+spFolder+'/'+encodeURIComponent(filename);
   console.log('[SP] Loading track',spIndex+1,'/',spPlaylist.length,':',src);
   spAudio.src=src;
   spTrackEl.textContent=filename.replace(/\.mp3$/i,'');
@@ -669,7 +669,7 @@ async function spOpenChannel(channelIdx){
   spShowPlayer(); // mostrar player inmediatamente
 
   // Cargar playlist.json
-  const url='demos/'+folder+'/playlist.json?cb='+Date.now();
+  const url='http://cdn.sonoplayer.cl/demos/'+folder+'/playlist.json?cb='+Date.now();
   console.log('[SP] Fetching:',url);
   let playlist=[];
   try{
